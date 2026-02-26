@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('partials/head', { title, description, url, siteUrl }) %>
+</head>
+
+<body class="bg-gray-50 dark:bg-bg text-gray-700 dark:text-text min-h-screen flex flex-col">
+  <%- include('partials/header') %>
+
+    <!-- ═══════════════════════════════════════════════════════
+       HERO — Full viewport, breathable, centered identity
+       ═══════════════════════════════════════════════════════ -->
+    <section class="min-h-[calc(100dvh-57px)] flex items-center relative px-6 sm:px-8">
+      <div class="w-full max-w-3xl mx-auto">
+
+        <!-- Status Badges Container -->
+        <div class="flex flex-col items-start gap-3 mb-6">
+          <!-- Availability Status Badge -->
+          <!-- <div
+            class="animate-breathing inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-200/60 dark:border-red-500/20 transition-all duration-500">
+            <span class="relative flex h-2.5 w-2.5 justify-center items-center">
+              <span class="animate-ping absolute inline-flex h-4 w-4 rounded-full bg-red-400 dark:bg-red-500 opacity-20"
+                style="animation-duration: 2s;"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500 dark:bg-red-500"></span>
+            </span>
+            <span class="text-xs font-mono font-medium text-red-700 dark:text-red-400 tracking-normal">Available for
+              backend &amp; full-stack roles</span>
+          </div> -->
+
+          <!-- ALTERNATIVE BADGE STYLES -->
+
+          <!-- GREEN (Success/Available) Badge  -->
+          <!-- <div
+            class="animate-breathing inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-500/10 border border-green-200/60 dark:border-green-500/20 transition-all duration-500">
+            <span class="relative flex h-2.5 w-2.5 justify-center items-center">
+              <span
+                class="animate-ping absolute inline-flex h-4 w-4 rounded-full bg-green-400 dark:bg-green-500 opacity-20"
+                style="animation-duration: 2s;"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500 dark:bg-green-500"></span>
+            </span>
+            <span class="text-xs font-mono font-medium text-green-700 dark:text-green-400 tracking-normal">Available for
+              backend &amp; full-stack roles</span>
+          </div> -->
+
+          <!-- YELLOW (Warning/Busy) Badge -->
+          <div
+            class="animate-breathing inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-200/60 dark:border-amber-500/20 transition-all duration-500">
+            <span class="relative flex h-2.5 w-2.5 justify-center items-center">
+              <span
+                class="animate-ping absolute inline-flex h-4 w-4 rounded-full bg-amber-400 dark:bg-amber-500 opacity-20"
+                style="animation-duration: 2s;"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500 dark:bg-amber-500"></span>
+            </span>
+            <span class="text-xs font-mono font-medium text-amber-700 dark:text-amber-400 tracking-normal">⚠️ Available for
+              backend &amp; full-stack roles</span>
+          </div>
+        </div>
+
+
+        <p class="font-mono text-xs sm:text-sm text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-5">
+          <%= resume.tagline.toLowerCase() %>
+        </p>
+        <h1
+          class="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-neutral-100 tracking-tight leading-[1.1] mb-5">
+          <%= resume.name %>
+        </h1>
+        <p class="font-mono text-base sm:text-lg text-green-600 dark:text-accent mb-6">
+          <%= resume.title %> · <svg class="w-4 h-4 inline-block -mt-0.5" fill="none" viewBox="0 0 24 24"
+              stroke="#fa8282" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            </svg>
+            <%= resume.location %>
+        </p>
+        <p class="text-gray-500 dark:text-text-muted leading-relaxed max-w-xl text-base sm:text-lg">
+          <%= resume.summary %>
+        </p>
+
+        <div class="flex items-center gap-4 mt-10">
+          <!-- Blog -->
+          <a href="/blog"
+            class="w-10 h-10 rounded-lg border border-gray-300 dark:border-neutral-800 flex items-center justify-center text-gray-500 dark:text-neutral-500 hover:border-green-500 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent hover:bg-green-50 dark:hover:bg-accent/5 transition-all duration-200"
+            aria-label="Blog" title="Blog">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+          </a>
+          <!-- GitHub -->
+          <a href="<%= resume.github %>" target="_blank" rel="noopener noreferrer"
+            class="w-10 h-10 rounded-lg border border-gray-300 dark:border-neutral-800 flex items-center justify-center text-gray-500 dark:text-neutral-500 hover:border-green-500 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent hover:bg-green-50 dark:hover:bg-accent/5 transition-all duration-200"
+            aria-label="GitHub" title="GitHub">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+            </svg>
+          </a>
+          <!-- Email -->
+          <a href="mailto:<%= resume.email %>"
+            class="w-10 h-10 rounded-lg border border-gray-300 dark:border-neutral-800 flex items-center justify-center text-gray-500 dark:text-neutral-500 hover:border-green-500 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent hover:bg-green-50 dark:hover:bg-accent/5 transition-all duration-200"
+            aria-label="Email" title="Email">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+        <span class="block w-px h-10 bg-gray-400 dark:bg-neutral-600"></span>
+        <span class="font-mono text-[10px] text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em]">scroll</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+       SKILLS — Compact grid of categories
+       ═══════════════════════════════════════════════════════ -->
+    <section
+      class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+      <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+        Technical Skills
+      </h2>
+      <% var skillDevicons={ 'JavaScript' : 'devicon-javascript-plain colored' , 'TypeScript'
+        : 'devicon-typescript-plain colored' , 'Python' : 'devicon-python-plain colored' , 'C'
+        : 'devicon-c-plain colored' , 'HTML5' : 'devicon-html5-plain colored' , 'CSS3' : 'devicon-css3-plain colored'
+        , 'React.js' : 'devicon-react-original colored' , 'Redux Toolkit' : 'devicon-redux-original colored'
+        , 'Tailwind CSS' : 'devicon-tailwindcss-original colored' , 'Material UI' : 'devicon-materialui-plain colored'
+        , 'Node.js' : 'devicon-nodejs-plain colored' , 'Express.js' : 'devicon-express-original dark:text-white'
+        , 'Fastify' : 'devicon-fastify-plain dark:text-white' , 'MongoDB' : 'devicon-mongodb-plain colored' , 'Mongoose'
+        : 'devicon-mongoose-original colored' , 'MySQL' : 'devicon-mysql-plain colored' , 'Firebase Firestore'
+        : 'devicon-firebase-plain colored' , 'Redis' : 'devicon-redis-plain colored' , 'AWS (EC2, S3)'
+        : 'devicon-amazonwebservices-plain-wordmark colored' , 'GCP' : 'devicon-googlecloud-plain colored' , 'Docker'
+        : 'devicon-docker-plain colored' , 'Kubernetes' : 'devicon-kubernetes-plain colored' , 'Nginx'
+        : 'devicon-nginx-original colored' , 'Git' : 'devicon-git-plain colored' , 'GitHub'
+        : 'devicon-github-original dark:text-white' , 'Postman' : 'devicon-postman-plain colored' , 'Figma'
+        : 'devicon-figma-plain colored' }; var skillIcons={ 'Languages'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>'
+        , 'Frontend'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"/></svg>'
+        , 'Backend'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>'
+        , 'Databases'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125v-3.75m16.5 3.75v3.75c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125v-3.75"/></svg>'
+        , 'DevOps & Cloud'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>'
+        , 'Tools & Methods'
+        : '<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.1 5.1a2.121 2.121 0 11-3-3l5.1-5.1m0 0L3.87 7.63a1.5 1.5 0 112.12-2.12l4.54 4.54m.93 1.12l5.1-5.1a2.121 2.121 0 113 3l-5.1 5.1m0 0l4.54 4.54a1.5 1.5 0 11-2.12 2.12l-4.54-4.54"/></svg>'
+        , }; %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+          <% Object.entries(resume.skills).forEach(function([category, items]) { %>
+            <div>
+              <h3
+                class="font-mono text-sm font-medium text-gray-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
+                <span class="text-green-600 dark:text-accent"><%- skillIcons[category] || '' %></span>
+                <%= category %>
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                <% items.forEach(function(skill) { %>
+                  <span
+                    class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-400 bg-white/60 dark:bg-neutral-900/40">
+                    <% if (skillDevicons[skill]) { %><i class="<%= skillDevicons[skill] %> text-sm"></i>
+                      <% } %>
+                        <%= skill %>
+                  </span>
+                  <% }); %>
+              </div>
+            </div>
+            <% }); %>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+       EXPERIENCE — Timeline style
+       ═══════════════════════════════════════════════════════ -->
+    <% if (resume.experience && resume.experience.length> 0) { %>
+      <section
+        class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+        <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+          Experience
+        </h2>
+        <div class="space-y-12" id="experience-list">
+          <% resume.experience.forEach(function(exp, index) { %>
+            <div
+              class="relative pl-6 border-l-2 border-green-500/30 dark:border-accent/30 <%= index >= 3 ? 'hidden hidden-experience' : '' %>">
+              <div
+                class="absolute -left-2 top-1 w-3 h-3 rounded-full bg-green-500 dark:bg-accent ring-4 ring-gray-50 dark:ring-bg">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-3">
+                <div>
+                  <h3 class="font-mono text-base sm:text-lg font-semibold text-gray-900 dark:text-neutral-100">
+                    <%= exp.role %>
+                  </h3>
+                  <p class="font-mono text-sm text-green-600 dark:text-accent">
+                    <%= exp.company %>
+                      <% if (exp.location) { %> · <%= exp.location %>
+                          <% } %>
+                  </p>
+                </div>
+                <span class="font-mono text-xs text-gray-400 dark:text-neutral-600 shrink-0">
+                  <%= exp.period %>
+                </span>
+              </div>
+              <ul class="space-y-2.5 mt-4">
+                <% exp.highlights.forEach(function(h) { %>
+                  <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-1 h-1 rounded-full bg-gray-300 dark:bg-neutral-700 mt-2.5"></span>
+                    <span class="text-sm text-gray-600 dark:text-neutral-400 leading-relaxed">
+                      <%= h %>
+                    </span>
+                  </li>
+                  <% }); %>
+              </ul>
+            </div>
+            <% }); %>
+        </div>
+
+        <% if (resume.experience.length> 3) { %>
+          <div class="mt-10 flex justify-center">
+            <button id="toggle-experience"
+              class="font-mono text-xs text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim uppercase tracking-[0.1em] px-4 py-2 border border-green-200 dark:border-accent/20 rounded-full transition-colors duration-200 bg-white/50 dark:bg-neutral-900/30">
+              Show All Experience (<%= resume.experience.length %>) &darr;
+            </button>
+          </div>
+          <% } %>
+      </section>
+      <% } %>
+
+        <!-- ═══════════════════════════════════════════════════════
+       PROJECTS — Card grid, generous spacing
+       ═══════════════════════════════════════════════════════ -->
+        <% if (projects && projects.length> 0) { %>
+          <section
+            class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+            <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-8">
+              Projects
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5" id="projects-list">
+              <% projects.forEach(function(project, index) { %>
+                <% if (project.url) { %>
+                  <a href="<%= project.url %>" target="_blank" rel="noopener noreferrer"
+                    class="contact-card group block border border-gray-200 dark:border-neutral-800 rounded-lg p-5 sm:p-6 bg-white/50 dark:bg-neutral-900/30 hover:border-green-500/50 dark:hover:border-accent/40 transition-all duration-200 <%= index >= 4 ? 'hidden hidden-project' : '' %>">
+                    <div class="flex items-center gap-2 mb-2">
+                      <h3
+                        class="font-mono text-sm sm:text-base font-semibold text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-200">
+                        <%= project.name %>
+                      </h3>
+                      <span
+                        class="text-gray-400 dark:text-neutral-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">↗</span>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-text-muted leading-relaxed mb-3">
+                      <%= project.description %>
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                      <% project.tech.forEach(function(t) { %>
+                        <span
+                          class="inline-block text-[11px] font-mono font-medium px-2.5 py-1 rounded border border-green-200 dark:border-accent/20 text-green-700 dark:text-accent bg-green-50 dark:bg-accent/10">
+                          <%= t %>
+                        </span>
+                        <% }); %>
+                    </div>
+                  </a>
+                  <% } else { %>
+                    <div
+                      class="contact-card border border-gray-200 dark:border-neutral-800 rounded-lg p-5 sm:p-6 bg-white/50 dark:bg-neutral-900/30 <%= index >= 4 ? 'hidden hidden-project' : '' %>">
+                      <h3 class="font-mono text-sm sm:text-base font-semibold text-gray-900 dark:text-neutral-100 mb-2">
+                        <%= project.name %>
+                      </h3>
+                      <p class="text-sm text-gray-500 dark:text-text-muted leading-relaxed mb-3">
+                        <%= project.description %>
+                      </p>
+                      <div class="flex flex-wrap gap-3">
+                        <% project.tech.forEach(function(t) { %>
+                          <span
+                            class="inline-block text-[11px] font-mono font-medium px-2.5 py-1 rounded border border-green-200 dark:border-accent/20 text-green-700 dark:text-accent bg-green-50 dark:bg-accent/10">
+                            <%= t %>
+                          </span>
+                          <% }); %>
+                      </div>
+                    </div>
+                    <% } %>
+                      <% }); %>
+            </div>
+
+            <% if (projects.length> 4) { %>
+              <div class="mt-10 flex justify-center">
+                <button id="toggle-projects"
+                  class="font-mono text-xs text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim uppercase tracking-[0.1em] px-4 py-2 border border-green-200 dark:border-accent/20 rounded-full transition-colors duration-200 bg-white/50 dark:bg-neutral-900/30">
+                  View All Projects (<%= projects.length %>) &darr;
+                </button>
+              </div>
+              <% } %>
+          </section>
+          <% } %>
+
+            <!-- ═══════════════════════════════════════════════════════
+       EDUCATION & CERTIFICATIONS — Side by side
+       ═══════════════════════════════════════════════════════ -->
+            <section
+              class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16">
+
+                <!-- Education -->
+                <% if (resume.education && resume.education.length> 0) { %>
+                  <div>
+                    <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-8">
+                      Education
+                    </h2>
+                    <div class="space-y-8">
+                      <% resume.education.forEach(function(edu) { %>
+                        <div>
+                          <h3
+                            class="font-mono text-sm sm:text-base font-semibold text-gray-900 dark:text-neutral-100 leading-snug">
+                            <%= edu.degree %>
+                          </h3>
+                          <p class="text-sm text-green-600 dark:text-accent font-mono mt-1">
+                            <%= edu.institution %>
+                          </p>
+                          <p class="text-xs text-gray-400 dark:text-neutral-600 font-mono mt-1">
+                            <%= edu.period %>
+                          </p>
+                          <% if (edu.highlights && edu.highlights.length> 0) { %>
+                            <p class="text-sm text-gray-500 dark:text-neutral-400 mt-3 leading-relaxed">
+                              <%= edu.highlights[0] %>
+                            </p>
+                            <% } %>
+                        </div>
+                        <% }); %>
+                    </div>
+                  </div>
+                  <% } %>
+
+                    <!-- Certifications -->
+                    <% if (resume.certifications && resume.certifications.length> 0) { %>
+                      <div>
+                        <h2
+                          class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-8">
+                          Certifications
+                        </h2>
+                        <div class="space-y-6">
+                          <% resume.certifications.forEach(function(cert) { %>
+                            <div class="relative pl-5 border-l border-gray-200 dark:border-neutral-800">
+                              <h3
+                                class="font-mono text-sm font-semibold text-gray-900 dark:text-neutral-100 leading-snug">
+                                <%= cert.name %>
+                              </h3>
+                              <p class="text-xs text-gray-400 dark:text-neutral-600 font-mono mt-1">
+                                <%= cert.issuer %> · <%= cert.year %>
+                              </p>
+                              <p class="text-sm text-gray-500 dark:text-neutral-400 mt-2 leading-relaxed">
+                                <%= cert.description %>
+                              </p>
+                            </div>
+                            <% }); %>
+                        </div>
+                      </div>
+                      <% } %>
+
+              </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════════════
+       BLOG — New & Trending side by side
+       ═══════════════════════════════════════════════════════ -->
+            <% if ((latestPosts && latestPosts.length> 0) || (trendingPosts && trendingPosts.length > 0)) { %>
+              <section
+                class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+                <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+                  From the Blog
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16">
+
+                  <!-- New -->
+                  <% if (latestPosts && latestPosts.length> 0) { %>
+                    <div>
+                      <h3
+                        class="font-mono text-sm font-medium text-gray-900 dark:text-neutral-100 mb-6 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 dark:bg-accent inline-block"></span>
+                        New
+                      </h3>
+                      <ul class="space-y-6">
+                        <% latestPosts.forEach(function(post) { %>
+                          <li>
+                            <a href="/blog/<%= post.frontmatter.slug %>" class="group block">
+                              <span
+                                class="font-mono text-base text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-200 leading-snug block">
+                                <%= post.frontmatter.title %>
+                              </span>
+                              <div class="flex items-center gap-3 mt-1.5">
+                                <time datetime="<%= post.frontmatter.date %>"
+                                  class="text-xs text-gray-400 dark:text-neutral-600 font-mono">
+                                  <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' ,
+                                    month: 'short' , day: 'numeric' }) %>
+                                </time>
+                                <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
+                                  <div class="flex gap-1.5">
+                                    <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
+                                      <span class="text-xs font-mono text-green-600/50 dark:text-accent/50">
+                                        <%= tag %>
+                                      </span>
+                                      <% }); %>
+                                  </div>
+                                  <% } %>
+                              </div>
+                              <% if (post.frontmatter.description) { %>
+                                <p class="text-sm text-gray-500 dark:text-text-muted mt-2 leading-relaxed">
+                                  <%= post.frontmatter.description %>
+                                </p>
+                                <% } %>
+                            </a>
+                          </li>
+                          <% }); %>
+                      </ul>
+                    </div>
+                    <% } %>
+
+                      <!-- Trending -->
+                      <% if (trendingPosts && trendingPosts.length> 0) { %>
+                        <div>
+                          <h3
+                            class="font-mono text-sm font-medium text-gray-900 dark:text-neutral-100 mb-6 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+                            Trending
+                          </h3>
+                          <ul class="space-y-6">
+                            <% trendingPosts.forEach(function(post, i) { %>
+                              <li class="flex items-start gap-4">
+                                <span
+                                  class="text-2xl font-mono text-gray-200 dark:text-neutral-800 leading-none mt-0.5 shrink-0 select-none">
+                                  <%= String(i + 1).padStart(2, '0' ) %>
+                                </span>
+                                <a href="/blog/<%= post.frontmatter.slug %>" class="group">
+                                  <span
+                                    class="font-mono text-base text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-200 leading-snug block">
+                                    <%= post.frontmatter.title %>
+                                  </span>
+                                  <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
+                                    <div class="flex gap-1.5 mt-1.5">
+                                      <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
+                                        <span class="text-xs font-mono text-green-600/50 dark:text-accent/50">
+                                          <%= tag %>
+                                        </span>
+                                        <% }); %>
+                                    </div>
+                                    <% } %>
+                                </a>
+                              </li>
+                              <% }); %>
+                          </ul>
+                        </div>
+                        <% } %>
+
+                </div>
+
+                <div class="mt-12">
+                  <a href="/blog"
+                    class="inline-flex items-center gap-2 font-mono text-sm text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim transition-colors duration-200">
+                    all posts <span>&rarr;</span>
+                  </a>
+                </div>
+              </section>
+              <% } %>
+
+                <!-- ═══════════════════════════════════════════════════════
+       CONTACT — Two-column: info + form
+       ═══════════════════════════════════════════════════════ -->
+                <section id="contact"
+                  class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+                  <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+                    Get In Touch
+                  </h2>
+
+                  <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16">
+
+                    <!-- ── Left: Contact Info ─────────────────────────────── -->
+                    <div class="md:col-span-2 space-y-8">
+                      <div>
+                        <p class="text-gray-500 dark:text-text-muted leading-relaxed text-sm">
+                          Open to new opportunities, collaborations, and interesting conversations. Feel free to reach
+                          out.
+                        </p>
+                      </div>
+
+                      <div class="space-y-5">
+                        <!-- Email -->
+                        <a href="mailto:<%= resume.email %>"
+                          class="group flex items-center gap-3 text-sm text-gray-600 dark:text-neutral-400 hover:text-green-600 dark:hover:text-accent transition-colors duration-200">
+                          <span
+                            class="shrink-0 w-8 h-8 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 group-hover:border-green-500/50 dark:group-hover:border-accent/40 group-hover:text-green-600 dark:group-hover:text-accent transition-all duration-200">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                              stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg>
+                          </span>
+                          <span class="font-mono">
+                            <%= resume.email %>
+                          </span>
+                        </a>
+
+                        <!-- Phone -->
+                        <a href="tel:<%= resume.phone %>"
+                          class="group flex items-center gap-3 text-sm text-gray-600 dark:text-neutral-400 hover:text-green-600 dark:hover:text-accent transition-colors duration-200">
+                          <span
+                            class="shrink-0 w-8 h-8 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 group-hover:border-green-500/50 dark:group-hover:border-accent/40 group-hover:text-green-600 dark:group-hover:text-accent transition-all duration-200">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                              stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg>
+                          </span>
+                          <span class="font-mono">
+                            <%= resume.phone %>
+                          </span>
+                        </a>
+
+                        <!-- Location -->
+                        <div class="flex items-center gap-3 text-sm text-gray-600 dark:text-neutral-400">
+                          <span
+                            class="shrink-0 w-8 h-8 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                              stroke-width="1.5">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                          </span>
+                          <span class="font-mono">
+                            <%= resume.location %>
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Social Links -->
+                      <div class="flex items-center gap-3 pt-2">
+                        <a href="<%= resume.github %>" target="_blank" rel="noopener noreferrer"
+                          class="w-9 h-9 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 hover:border-green-500/50 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent transition-all duration-200"
+                          aria-label="GitHub">
+                          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                          </svg>
+                        </a>
+                        <% if (resume.linkedin) { %>
+                          <a href="<%= resume.linkedin %>" target="_blank" rel="noopener noreferrer"
+                            class="w-9 h-9 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 hover:border-green-500/50 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent transition-all duration-200"
+                            aria-label="LinkedIn">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                            </svg>
+                          </a>
+                          <% } %>
+                      </div>
+                    </div>
+
+                    <!-- ── Right: Contact Form ────────────────────────────── -->
+                    <div class="md:col-span-3">
+                      <form id="contact-form" action="https://formsubmit.co/<%= resume.email %>" method="POST"
+                        novalidate
+                        class="contact-card border border-gray-200 dark:border-neutral-800 rounded-lg p-6 sm:p-8 bg-white/50 dark:bg-neutral-900/30 space-y-6">
+
+                        <!-- Honeypot & Config -->
+                        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_next" value="<%= siteUrl %>/#contact">
+
+                        <!-- Name & Email (side by side) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div>
+                            <label for="contact-name"
+                              class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Name</label>
+                            <input type="text" id="contact-name" name="name" required placeholder="Your Name"
+                              class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 placeholder-gray-400 dark:placeholder-neutral-600 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200">
+                          </div>
+                          <div>
+                            <label for="contact-email"
+                              class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Email</label>
+                            <input type="email" id="contact-email" name="email" required placeholder="your@email.com"
+                              class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 placeholder-gray-400 dark:placeholder-neutral-600 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200">
+                          </div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div>
+                          <label for="contact-subject"
+                            class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Subject</label>
+                          <select id="contact-subject" name="_subject" required
+                            class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200 appearance-none cursor-pointer"
+                            style="background-image: url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e&quot;); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
+                            <option value="Job Opportunity">Job Opportunity</option>
+                            <option value="Interview Request">Interview Request</option>
+                            <option value="Project Inquiry">Project Inquiry</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                          </select>
+                        </div>
+
+                        <!-- Message -->
+                        <div>
+                          <label for="contact-message"
+                            class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Message</label>
+                          <textarea id="contact-message" name="message" required rows="4" placeholder="Your message..."
+                            class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 placeholder-gray-400 dark:placeholder-neutral-600 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200 resize-none"></textarea>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" id="contact-submit"
+                          class="inline-flex items-center gap-2 font-mono text-sm font-medium px-6 py-2.5 rounded-md bg-green-600 dark:bg-accent text-white dark:text-neutral-900 hover:bg-green-700 dark:hover:bg-accent-dim transition-colors duration-200 shadow-lg shadow-green-600/20 dark:shadow-accent/20">
+                          Send Message
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                          </svg>
+                        </button>
+                      </form>
+                    </div>
+
+                  </div>
+                </section>
+
+                <!-- ── Toast Notification ──────────────────────────────── -->
+                <div id="toast-container"
+                  class="fixed top-20 right-4 sm:right-6 z-[999] flex flex-col gap-3 pointer-events-none w-[calc(100%-2rem)] sm:w-auto">
+                </div>
+
+                <%- include('partials/footer') %>
+
+                  <!-- UI Toggles for scalable experience & projects -->
+                  <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                      // Experience Toggle
+                      const toggleExpBtn = document.getElementById('toggle-experience');
+                      if (toggleExpBtn) {
+                        let expExpanded = false;
+                        toggleExpBtn.addEventListener('click', () => {
+                          expExpanded = !expExpanded;
+                          document.querySelectorAll('.hidden-experience').forEach(el => {
+                            if (expExpanded) {
+                              el.classList.remove('hidden');
+                              el.classList.add('animate-fade-in'); // Optional: Add a simple fade-in utility class if you have one
+                            } else {
+                              el.classList.add('hidden');
+                            }
+                          });
+                          toggleExpBtn.innerHTML = expExpanded ? 'Show Less &uarr;' : `Show All Experience (<%= resume.experience ? resume.experience.length : 0 %>) &darr;`;
+                        });
+                      }
+
+                      // Projects Toggle
+                      const toggleProjBtn = document.getElementById('toggle-projects');
+                      if (toggleProjBtn) {
+                        let projExpanded = false;
+                        toggleProjBtn.addEventListener('click', () => {
+                          projExpanded = !projExpanded;
+                          document.querySelectorAll('.hidden-project').forEach(el => {
+                            if (projExpanded) {
+                              el.classList.remove('hidden');
+                            } else {
+                              el.classList.add('hidden');
+                            }
+                          });
+                          toggleProjBtn.innerHTML = projExpanded ? 'View Less &uarr;' : `View All Projects (<%= projects ? projects.length : 0 %>) &darr;`;
+                        });
+                      }
+                    });
+                  </script>
+
+                  <!-- Contact Form AJAX + Toast ──────────────────────────── -->
+                  <script>
+                    (function () {
+                      const form = document.getElementById('contact-form');
+                      const btn = document.getElementById('contact-submit');
+                      if (!form || !btn) return;
+
+                      const btnText = btn.innerHTML;
+
+                      // ── Toast Factory ────────────────────────────────────────
+                      function showToast(type, title, message) {
+                        const container = document.getElementById('toast-container');
+                        const toast = document.createElement('div');
+                        const isSuccess = type === 'success';
+
+                        toast.className = 'toast-notification pointer-events-auto';
+                        toast.innerHTML = `
+        <div class="toast-icon ${isSuccess ? 'toast-icon--success' : 'toast-icon--error'}">
+          ${isSuccess
+                            ? '<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>'
+                            : '<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>'
+                          }
+        </div>
+        <div class="toast-body">
+          <p class="toast-title">${title}</p>
+          <p class="toast-msg">${message}</p>
+        </div>
+        <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="toast-progress"><div class="toast-progress-bar ${isSuccess ? 'toast-progress--success' : 'toast-progress--error'}"></div></div>
+      `;
+
+                        container.appendChild(toast);
+
+                        // Trigger entrance animation
+                        requestAnimationFrame(() => toast.classList.add('toast-visible'));
+
+                        // Auto-dismiss after 5s
+                        setTimeout(() => {
+                          toast.classList.remove('toast-visible');
+                          toast.classList.add('toast-exit');
+                          toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+                          // Fallback removal
+                          setTimeout(() => toast.remove(), 500);
+                        }, 5000);
+                      }
+
+                      // ── AJAX Submit ───────────────────────────────────────────
+                      form.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        // Validate required fields
+                        var nameInput = document.getElementById('contact-name');
+                        var emailInput = document.getElementById('contact-email');
+                        var messageInput = document.getElementById('contact-message');
+
+                        if (!nameInput.value.trim()) {
+                          showToast('error', 'Name Required', 'Please enter your name.');
+                          nameInput.focus();
+                          return;
+                        }
+
+                        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(emailInput.value.trim())) {
+                          showToast('error', 'Invalid Email', 'Please enter a valid email address.');
+                          emailInput.focus();
+                          return;
+                        }
+
+                        if (!messageInput.value.trim()) {
+                          showToast('error', 'Message Required', 'Please write a message before sending.');
+                          messageInput.focus();
+                          return;
+                        }
+
+                        // Loading state
+                        btn.disabled = true;
+                        btn.innerHTML = `
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Sending...
+      `;
+
+                        try {
+                          const data = new FormData(form);
+                          const res = await fetch(form.action, {
+                            method: 'POST',
+                            body: data,
+                            headers: { 'Accept': 'application/json' }
+                          });
+
+                          if (res.ok) {
+                            showToast('success', 'Message Sent!', 'Thanks for reaching out. I\'ll get back to you soon.');
+                            form.reset();
+                          } else {
+                            showToast('error', 'Failed to Send', 'Server error (' + res.status + '). Please try emailing directly.');
+                          }
+                        } catch (err) {
+                          // CORS/network errors — FormSubmit still processes the email,
+                          // the browser just can't read the cross-origin response.
+                          showToast('success', 'Message Sent!', 'Thanks for reaching out. I\'ll get back to you soon.');
+                          form.reset();
+                          console.info('Contact form: request sent (CORS opaque response is normal):', err.message);
+                        } finally {
+                          btn.disabled = false;
+                          btn.innerHTML = btnText;
+                        }
+                      });
+                    })();
+                  </script>
+</body>
+
+</html>

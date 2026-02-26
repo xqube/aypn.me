@@ -1,0 +1,27 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<meta name="description" content="<%= description %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="<%= title %>">
+<meta property="og:description" content="<%= description %>">
+<meta property="og:url" content="<%= siteUrl %><%= url %>">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= title %>">
+<meta name="twitter:description" content="<%= description %>">
+
+<!-- Canonical -->
+<link rel="canonical" href="<%= siteUrl %><%= url %>">
+
+<!-- Styles -->
+<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+<!-- Theme: read localStorage before paint to prevent flash -->
+<script>
+(function(){var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}})();
+</script>
