@@ -55,14 +55,14 @@ Let's look at how the V8 engine maps this to physical RAM in 2026.
 
 When JavaScript executes, it creates **Execution Contexts**.
 
-1. **Compilation Phase:** V8 parses the code. It registers all variable decelerations (`let`, `const`, `function`) in a Lexical Environment record.
+1. **Compilation Phase:** V8 parses the code. It registers all variable declarations (`let`, `const`, `function`) in a Lexical Environment record.
 2. **Execution Phase:** V8 assigns values. 
 
-If an inner function references a variable from an outer function, V8 performs a crucial optimization step during compilation called **Escape Analysis**.
+If an inner function references a variable from an outer function, V8 performs a crucial scoping optimization during compilation (parse time) to determine whether a variable is **context-allocated** or **stack-allocated**.
 
 Normally, local variables like `let x = 10` are allocated directly on the **Call Stack**. The Call Stack is incredibly fast, but it is ephemeral; the moment the function returns, the stack frame is popped, and the memory is instantly overwritten. 
 
-But if V8 detects that an inner function references `x`, and that inner function *escapes* the current scope (e.g., it is returned, or passed as a callback to an event listener), V8 panics (in a good way). It says, "I can't put `x` on the Stack! It will disappear!" 
+But if V8 detects during scope analysis that an inner function references `x`, it understands that `x` cannot be put on the Stack because it will outlive the function call. 
 
 Instead, V8 allocates a special **Context Object** on the **Heap**. It moves `x` off the Stack and into this Heap Object. The inner function’s `[[Environment]]` property holds a pointer directly to that Context Object on the Heap.
 
@@ -193,10 +193,11 @@ At an enterprise scale, the V8 Context Object generation can become a silent ass
 Every time a function with a closure is invoked, V8 must allocate a new Context Object on the Heap. If you are dealing with arrays of millions of items and you define operations inline:
 
 ```typescript
-// Expensive: Creates 1,000,000 unique closure objects
+```typescript
+// Expensive: Massive allocation pressure from uniquely created closure objects
 hugeArray.map(item => process(item, externalVar)); 
 ```
-The V8 Garbage Collector (Specifically the Scavenger in the New Generation space) now has to sweep 1,000,000 ephemeral context objects. This causes high CPU utilization during GC cycles.
+While modern V8 (TurboFan) is smart enough to often optimize away the individual *Context Objects* for inline arrow functions in the same scope, creating 1,000,000 distinct function objects (the callbacks themselves) still creates massive allocation pressure that the New Generation Scavenger must sweep.
 
 *Production Fix:* Lift functions out of loops if the closure is identical.
 ```typescript
@@ -210,7 +211,7 @@ V8 performs an optimization where multiple inner functions sharing the same oute
 
 ```javascript
 function factory() {
-  const hugeData = new Buffer(100 * 1024 * 1024); // 100MB
+  const hugeData = Buffer.alloc(100 * 1024 * 1024); // 100MB
   const tinyData = "hello";
 
   const getTiny = function() { return tinyData; }
@@ -224,7 +225,7 @@ const myFunc = factory(); // myFunc holds 100MB of memory forever.
 ```
 
 Why? Because both `getTiny` and `getHuge` were compiled in the same Lexical Environment, V8 created a single Context Object containing *both* `hugeData` and `tinyData`. Because `myFunc` (which is `getTiny`) has a pointer to that shared Context Object, the entire 100MB buffer is kept alive permanently. This is known as the "Shared Context Closure Leak."
-*Production Fix:* Nullify massive objects when no longer needed in scope (`hugeData = null`), or utilize Block Scoping (`let`/`const` inside braces `{}`) to separate lexical contexts.
+*Production Fix:* Utilize Block Scoping (`{}`) to isolate the massive object initialization from the closures that don't need it, or restructure the code entirely so the two functions don't share the same lexical context. (Note: simply attempting to reassign the variable to `null` is a common anti-pattern—it fails if the variable is `const`, and even with `let`, the memory is already context-allocated).
 
 ---
 
@@ -387,7 +388,7 @@ How do we catch excessive closure accumulation before it crashes a cluster?
 1. **Explain how "Escape Analysis" in V8 decides whether to put a variable on the Stack or the Heap.**
    *Answer:* V8 analyzes the AST. Normally, function locals go on the extremely fast, LIFO Call Stack. If V8 detects that an inner function references a local variable, and that inner function will "escape" (be returned or passed as a callback), it knows the Stack frame will be destroyed before the inner function executes. V8 automatically allocates a Context Object on the Heap instead, and rewrites the underlying machine code to point the closure to that Heap location.
 2. **If you have a function returning an inner function, but the inner function makes zero references to the outer function's variables, does V8 still create a Context closure object on the Heap?**
-   *Answer:* No. Modern JS engines implement "Closure Optimization." If the compiler proves that the inner function makes no lexical references to the outer scope, it does not allocate the associated Context Object on the Heap, saving memory and eliminating garbage collection overhead. 
+   *Answer:* No. V8 makes Context Allocation decisions *per-variable*, not per-scope. If the inner function references `variableA` but not `variableB`, only `variableA` is context-allocated on the Heap. `variableB` remains on the stack and is safely destroyed when the outer function returns. If no variables are referenced, no Context Object is allocated at all, saving memory and eliminating garbage collection overhead. 
 
 ### Senior Level
 1. **Describe the "Shared Lexical Environment Leak" (The Meteor Bug).**

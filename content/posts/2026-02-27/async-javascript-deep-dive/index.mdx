@@ -65,7 +65,7 @@ When V8 encounters an `await` keyword, it does something extraordinary:
 3. It immediately exits the function, yielding control back to the caller (and eventually the Event Loop).
 4. When the awaited operation completes, V8 restores the suspended execution context, places the function back on the Call Stack, and resumes execution on the exact next line.
 
-Under the hood, `async/await` is implemented using **Generators** and the V8 runtime's ability to pause and resume stack frames. It allows asynchronous code to maintain standard `try/catch` error bubbling, which was impossible with callbacks.
+Under the hood, modern V8 implements `async/await` natively as a first-class feature using its own internal promise and stack suspension mechanism—it does not rely on Generators like early transpilers did. It allows asynchronous code to maintain standard `try/catch` error bubbling, which was impossible with callbacks.
 
 ---
 
@@ -164,7 +164,7 @@ Scaling asynchronous code introduces entirely new classes of bugs that do not ap
 ### Connection Pool Exhaustion via `Promise.all`
 While `Promise.all` is powerful, it is dangerous with unbounded arrays. If you must process 10,000 users and run `await Promise.all(users.map(u => processUser(u)))`, V8 immediately creates 10,000 pending promises and fires 10,000 simultaneous queries to your database. Your PostgreSQL connection pool (typically set to 20-50 connections) will immediately become exhausted. Queries will sit in the queue until they hit their socket timeouts, resulting in cascading failures across your entire infrastructure.
 
-*Production Fix:* You must use an concurrency-limited pool. Use libraries like `p-limit` or chunk your arrays.
+*Production Fix:* You must use a concurrency-limited pool. Use libraries like `p-limit` or chunk your arrays.
 ```typescript
 import pLimit from 'p-limit';
 const limit = pLimit(20); // Max 20 concurrent operations
@@ -195,19 +195,20 @@ async function getUser(id) {
   return await db.users.find(id);
 }
 
-// Highly efficient: just passes the pending Promise back to the caller
+// Highly efficient on CPU allocation, BUT drops the function from the async stack trace:
 function getUser(id) {
   return db.users.find(id);
 }
 ```
-*(Note: Be careful with `try/catch`. If you just `return` a Promise inside a `try` block without `await`, the `catch` block will not fire if the promise rejects, because the function returns the pending promise synchronously.)*
+> [!WARNING]
+> While returning a Promise directly without `await` saves a micro-fraction of allocation overhead, it is **dangerous in production**. When you return a Promise without `await`, the wrapper function disappears from the async stack trace entirely because its execution context is immediately popped off the stack before the Promise resolves or rejects. The official V8 guidance recommends using `return await` inside `async` functions specifically to preserve high-quality stack traces for debugging. The performance difference in modern V8 is negligible, but the debuggability loss is severe. Additionally, if you just `return` an un-awaited Promise inside a `try` block, the local `catch` block will not fire if the promise rejects.
 
 ---
 
 ## 8. SECURITY IMPLICATIONS
 
 ### Asynchronous Context Bleeding
-In Node.js 2026, we heavily utilize `AsyncLocalStorage` (from `node:async_hooks`) to pass tenant IDs, transaction tracing, and user authentication contexts down the asynchronous chain without prop-drilling.
+In modern Node.js, we heavily utilize `AsyncLocalStorage` (from `node:async_hooks`) to pass tenant IDs, transaction tracing, and user authentication contexts down the asynchronous chain without prop-drilling.
 
 If a developer accidentally breaks the promise chain—by firing a "fire-and-forget" promise without awaiting it, or mixing `setTimeout` with promises improperly—the subsequent code might execute outside of the intended `AsyncLocalStorage` execution scope. 
 
@@ -269,7 +270,7 @@ async function connectWithRetry() {
 }
 ```
 
-If the legacy service is permanently offline and rejects instantaneously, this creates an infinite recursive loop of Microtasks. Because Promises jump straight onto the V8 Microtask queue—which must be emptied *entirely* before the application can process anything else—this loop completely starves the Event Loop. 
+If the legacy service is permanently offline and rejects instantaneously, this creates an infinite recursive loop. While each `await` at the recursion line *does* technically yield to the Microtask queue, it immediately queues the next recursive call as the *next* Microtask. Because the Microtask queue must empty entirely before the application can process anything from the Macrotask queue (like incoming network events or timers), this loop completely starves the Event Loop. 
 
 Your server's CPU hits 100%. The Kubernetes `/healthz` check, which relies on the HTTP module (Macrotask queue), never gets a response. Kubernetes assumes the pod is unresponsive and restarts it. Traffic routes to the next pod, which immediately enters the same starvation loop. Your entire cluster cascades into failure in minutes.
 
@@ -293,18 +294,21 @@ To detect asynchronous bottlenecks before they crash your systems, you must moni
 Over years of auditing codebases, the most prevalent mistakes involve mixing legacy paradigms.
 
 **The "Zalgo" Anti-Pattern:**
-Returning synchronously in one branch and asynchronously in another.
-```typescript
-function getCache(key) {
+Returning synchronously via callback in one branch and asynchronously via callback in another.
+```javascript
+// DANGER: The Zalgo pattern inside a callback-based API
+function getCache(key, callback) {
   if (memoryCache[key]) {
-      // DANGER: Synchronous return
-      return Promise.resolve(memoryCache[key]); 
+      // Synchronous execution
+      callback(memoryCache[key]); 
+  } else {
+      // Asynchronous execution
+      redisClient.get(key, callback); 
   }
-  // Asynchronous return
-  return redisClient.get(key); 
 }
 ```
-If a caller assumes `getCache` is genuinely asynchronous, they might expect it to yield execution. If it yields instantly via cache hit, the Call Stack sequence can become completely unpredictable, leading to race conditions where UI renders before data is fully normalized. *Rule:* Always ensure APIs are exclusively synchronous or exclusively asynchronous.
+*(Note: This unpredictability specifically plagues callback-based APIs. If this same logic returned Promises, `Promise.resolve()` is always microtask-async, avoiding true Zalgo unpredictability for the caller).* 
+If a caller of this callback API assumes `getCache` is genuinely asynchronous, they might expect it to yield execution. If it yields instantly via a synchronous cache hit, the Call Stack sequence becomes completely unpredictable, leading to race conditions where UI renders before data is fully normalized. *Rule:* Always ensure APIs are exclusively synchronous or exclusively asynchronous.
 
 **Forgetting `await` inside mapping functions:**
 ```javascript

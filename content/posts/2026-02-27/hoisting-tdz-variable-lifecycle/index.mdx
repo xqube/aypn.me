@@ -63,8 +63,8 @@ When V8 receives your `.js` file, it does not execute line 1 immediately.
 
 **Phase 1: Parsing and Scope Construction**
 The Parser walks the Abstract Syntax Tree (AST). Whenever it encounters `var`, `let`, `const`, `function`, or `class`, it registers that identifier in the current **Lexical Environment** (Scope). 
-- If it sees `var x = 10;`, it registers `x` and *immediately initializes* its memory to `undefined`.
-- If it sees `let y = 20;`, it registers `y`, but leaves the memory address **uninitialized**.
+- If it sees `var x = 10;`, it registers `x` and *immediately initializes* its memory slot to `undefined`.
+- If it sees `let y = 20;`, it registers `y` and **allocates a memory slot for it**, but instead of writing `undefined`, it sets a sentinel flag marking the variable as **uninitialized** (inaccessible).
 - If it sees `function sum() { ... }`, it registers `sum`, initializes the memory, and *immediately assigns* the entire function body to it.
 
 **Phase 2: Execution**
@@ -157,7 +157,7 @@ function createPool(): Pool {
 
 ### Why this works:
 1. **No TDZ Violations:** Variables (`DATABASE_URL`) are evaluated before any function that uses them is executed.
-2. **Safe Hoisting:** By using `function createPool() {}` instead of `const createPool = () => {}`, the senior developer leverages V8's "Hoisting Phase 1" assignment. `createPool` is fully available in memory the exact millisecond the file begins executing, allowing it to be safely invoked by `initializeDatabase` without rearranging the file structure purely for the engine's sake.
+2. **Safe Hoisting:** By using `function createPool() {}` instead of `const createPool = () => {}`, the senior developer leverages V8's "Hoisting Phase 1" assignment. `createPool` is fully available in memory before execution even begins (at the end of the compilation phase), allowing it to be safely invoked by `initializeDatabase` without rearranging the file structure purely for the engine's sake.
 
 ---
 
@@ -193,7 +193,7 @@ case 'ADD_USER': {
 
 ### The `for` loop closure binding
 In ES5 (`var`), asynchronous tasks inside loops notoriously bound to the identical memory address. At 10,000 operations per second, this resulted in thousands of database queries firing for the wrong User ID.
-Using `let` in a `for (let i = 0; ...)` loop forces V8 to implicitly create a brand new Lexical Environment and re-initialize the variable for *every single iteration*. This safely locks the variable for closures, but heavily punishes V8's New Space Garbage Collector at high throughput.
+Using `let` in a `for (let i = 0; ...)` loop technically forces V8 to implicitly create a brand new Lexical Environment and re-initialize the variable for *every single iteration*. This safely locks the variable for closures. However, modern V8's TurboFan optimizes away this per-iteration environment entirely if no closure actually captures `i`. The New Space Garbage Collector is only heavily punished if you are actively creating functions inside that loop that capture the iteration variable.
 
 ---
 
@@ -204,7 +204,7 @@ Measuring variable declaration performance is micro-optimization, but at critica
 ### `const` vs `let` in V8 Optimization
 Many developers believe `const` is faster than `let` because it is immutable. In early versions of V8, this was true, as the compiler could aggressive inline `const` values.
 
-In modern V8 (2026), **there is no execution performance difference between `let` and `const`**. TurboFan (the JIT compiler) analyzes the Data Flow Graph independently of your keywords. If you declare a variable with `let` but never reassign it, TurboFan optimizes it identically to `const`. 
+In modern V8, **there is no execution performance difference between `let` and `const`**. TurboFan (the JIT compiler) analyzes the Data Flow Graph independently of your keywords. If you declare a variable with `let` but never reassign it, TurboFan optimizes it identically to `const`. 
 
 However, `const` should be used universally because it provides strict **Compile-Time Guarantees**. It prevents other developers from mutating scope unexpectedly, which prevents pipeline deoptimizations.
 
@@ -320,13 +320,14 @@ Therefore, observability starts at compilation.
 
 ## 13. COMMON INDUSTRY MISTAKES
 
-1. **Relying on `typeof` for safety checks:**
-   In the legacy era, checking if a variable existed using `typeof x === 'undefined'` was safe, even if `x` was never declared. It was the standard way to check for polyfills.
+1. **Relying on `typeof` for TDZ safety checks:**
+   In the legacy era, checking if a bare identifier existed using `typeof myVar === 'undefined'` was safe, even if `myVar` was never declared.
    ```javascript
-   // Safe if feature is not declared
-   if (typeof window.Promise === 'undefined') { ... } 
+   if (typeof myFeature === 'undefined') { /* safe fallback */ }
+   let myFeature = true; // ❌ CRASH: ReferenceError
    ```
-   If a team migrates `Promise` to a `let` block scope, `typeof` no longer protects you. Using `typeof` on a variable stuck in the Temporal Dead Zone will violently crash with a `ReferenceError`. The TDZ actively breaks the `typeof` safety net.
+   If a team migrates legacy initialization code to use `let` or `const` in the same block scope, `typeof` no longer protects you. Using `typeof` on a bare identifier stuck in the Temporal Dead Zone will violently crash with a `ReferenceError`. The TDZ actively breaks the `typeof` safety net for identifier lookups.
+   *(Note: This crash only applies to block-scoped variables in the same scope. Standard property checks on objects, like `typeof window.Promise === 'undefined'`, remain completely safe and are unaffected by TDZ).*
 
 2. **The "Let Loop" misunderstanding:**
    ```javascript
