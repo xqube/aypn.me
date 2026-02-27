@@ -361,6 +361,15 @@ An unhealthy system shows a "rising tide" sawtooth. The baseline after every Maj
 **Architect Level:**
 1. Your team's Node.js cluster is processing 500,000 requests per second. CPU profiling reveals the application is spending 40% of its total execution time in "Stop-The-World" Garbage Collection pauses, causing unacceptable P99 latency. Assuming you cannot rewrite the app in Rust or Go, detail the architectural, architectural-level memory management, and binary data structure strategies you would implement to bypass V8's GC overhead.
 
+   **Strategy 1 — Object Pooling:** Pre-allocate a fixed pool of reusable objects at startup. Instead of creating `new RequestContext()` per request (which floods the nursery and triggers Scavenger pauses), grab one from the pool, reset its fields, use it, and return it. Zero allocations = zero GC pressure. This is the single highest-impact change.
+
+   **Strategy 2 — ArrayBuffer / TypedArray for Hot-Path Data:** Replace JavaScript objects with `SharedArrayBuffer` or `ArrayBuffer` + `DataView` for any data that is created and discarded at high frequency (e.g., protocol parsing, metric counters). Typed arrays are allocated outside the V8 managed heap — the GC never walks them. Store fixed-width records (request ID: `Uint32`, timestamp: `Float64`, status: `Uint16`) in a pre-allocated ring buffer backed by a `TypedArray`.
+
+   **Strategy 3 — Off-Heap Processing via Worker Threads:** Move allocation-heavy work (JSON parsing, serialization, compression) into dedicated `worker_threads`. Each worker has its own V8 isolate with its own GC. Transfer data between threads using `SharedArrayBuffer` (zero-copy) or `Transferable` `ArrayBuffer` objects. The main thread stays lean and its GC pauses drop to microseconds.
+
+   **Strategy 4 — V8 GC Flag Tuning:** Use `--max-old-space-size` to give Old Space enough room that Major GC triggers less frequently. Use `--max-semi-space-size` (default 16MB) to increase the nursery — larger nursery = fewer Scavenger runs, at the cost of longer individual pauses. If latency-sensitive, set `--gc-interval` and `--expose-gc` to trigger GC manually during low-traffic windows (e.g., between health checks).
+
+   **Strategy 5 — Arena Allocation Pattern:** For request processing pipelines, allocate all per-request working memory from a single pre-allocated `Buffer` (an arena). Each stage of the pipeline writes to offsets within that buffer. At request completion, "free" the entire arena by resetting the offset pointer to zero — no individual object deallocation, no GC involvement. This mirrors how game engines and real-time systems manage memory.
 ---
 
 ### 15. CONCLUSION
