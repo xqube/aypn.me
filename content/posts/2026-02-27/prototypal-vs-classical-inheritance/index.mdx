@@ -60,7 +60,7 @@ When you call `dog.eat()`, the V8 engine performs a **Prototype Walk**:
 2. Follow `dog.__proto__` to `Animal.prototype`.
 3. Does `Animal.prototype` have `eat`? Yes. Execute it.
 
-If the chain is 10 levels deep (like our `PremiumUserValidator`), V8 must traverse 10 pointers for *every single property access* that isn't on the instance itself. This is why deep inheritance hierarchies in JS are a performance anti-pattern.
+If the chain is 10 levels deep (like our `PremiumUserValidator`), a naive evaluation implies V8 must traverse 10 pointers for *every single property access* that isn't on the instance itself. However, modern V8 heavily mitigates this cold-path penalty on the *hot path* (repeated executions) by caching the final memory location. Still, a deep architecture creates significantly more work for the engine during initialization, shape transitions, and cache misses.
 
 ### Hidden Classes (Shapes) and Transitions
 V8 doesn't actually do a slow string search for every property access. It uses **Hidden Classes** (also called **Shapes**).
@@ -106,7 +106,7 @@ const error = new PostgresError('Timeout', 'SELECT...', '54000');
 
 ### What is wrong here?
 While this looks like "clean" OOP, it's problematic in JavaScript:
-1. **The `super()` Tax:** In JS, `super()` does a lot of work. It has to initialize the entire prototype chain. In deep hierarchies, constructor execution time scales linearly.
+1. **The Constructor Chain Penalty:** In JS, calling `super()` executes the parent constructor function. In deep hierarchies (A extends B extends C), creating a single instance triggers a cascading execution of *every* constructor in the chain. Instantiation time scales linearly not because `super()` itself is inherently slow, but because you are running N separate constructor functions just to build one object.
 2. **Fragile Base Class:** If someone adds a property to `BaseError`, it potentially alters the Hidden Class transitions for all descendants, leading to deoptimizations across the entire app.
 3. **Implicit State:** If `BaseError` had a static property used for counters, *every* descendant would share that same physical memory location on the prototype, leading to unintended side effects if the team doesn't understand reference sharing.
 
@@ -174,7 +174,7 @@ In production, you should **never** use `Object.setPrototypeOf()` or assign to `
 
 Why? Because of **Inline Caches (IC)** in the JIT Compiler. When V8 compiles a function like `function getName(user) { return user.name; }`, it remembers the Hidden Class of `user` and the exact memory offset where `.name` lives. It caches this offset directly into the machine code block.
 
-If you mutate the prototype of *any* object sharing that Hidden Class, V8 must assume the structure has changed. It violently throws away the optimized machine code cache for every function that ever interacted with those objects (a process called **Deoptimization Bakeout**). This causes a massive, global CPU spike as the entire server drops back to interpreted Bytecode to re-learn the object shapes.
+If you mutate the prototype of *any* object sharing that Hidden Class, V8 must assume the structure has changed. It violently throws away the optimized machine code cache for every function that ever interacted with those objects (a process called **Deoptimization** or **Bailout**). This causes a massive, global CPU spike as the entire server drops back to interpreted Bytecode to re-learn the object shapes.
 
 ### Memory Leaks via Prototype References
 If you attach a massive object (like a localized dictionary or an API connection pool) to a `BaseClass.prototype`, that object is never garbage collected as long as the class constructor function exists in memory (which is usually for the life of the entire Node.js process). If you accidentally keep a reference to a single tiny instance of a child class in a global array anywhere, you are effectively keeping the entire prototype tree and all its shared attached data alive in the V8 Old Generation Space.
@@ -186,8 +186,8 @@ If you attach a massive object (like a localized dictionary or an API connection
 Measuring inheritance performance requires focusing on **Monomorphism**.
 
 ### Benchmarking the Prototype Walk
-If you have a chain 5 levels deep, calling a method on the leaf node is slower than calling one on the instance.
-*Optimization:* If you have a critical, high-frequency method (like a math helper), attach it directly to the instance in the constructor (`this.calculate = ...`) instead of the prototype. This trades a small bit of memory (per-instance function pointers) for significant execution speed (O(1) access).
+If you have a chain 5 levels deep, the *first* time a method is called, the traversal is O(N). But on subsequent calls, V8's Inline Cache makes it effectively O(1).
+*Optimization:* Do not manually bind methods to instances inside the constructor (e.g., `this.calculate = ...`) in an attempt to get "faster," O(1) property access. Attaching functions to the instance creates unique function objects per instance, blowing up memory and completely defeating V8's ability to create a fast, megamorphic-resistant Inline Cache based on the shared prototype. Trust the IC. Keep your methods on the prototype.
 
 ### Using `Object.create(null)`
 For high-performance maps and caches, seniors use `Object.create(null)`. 
@@ -204,9 +204,13 @@ This is the most dangerous vulnerability in the JavaScript object model. Since p
 ```typescript
 // Malicious Input: { "__proto__": { "isAdmin": true } }
 const userConfig = JSON.parse(userInput);
-const settings = Object.assign({}, defaultSettings, userConfig);
 
-// Because of Prototype Pollution, EVERY object now has .isAdmin === true
+// Vulnerable Deep Merge logic (e.g., an older version of lodash.merge or a custom recursive merge)
+// Standard Object.assign({}, default, userConfig) is actually SAFE here because it only copies own properties.
+// True pollution occurs when a recursive function traverses into the __proto__ key.
+deepMerge(defaultSettings, userConfig); 
+
+// Because of Prototype Pollution, EVERY object globally now has .isAdmin === true
 if (currentUser.isAdmin) {
   // Attacker has gained full administrative access
 }
@@ -280,7 +284,7 @@ Half of your production fleet is running the old prototype in memory (due to a s
 
 ## 13. COMMON INDUSTRY MISTAKES
 
-1. **Treating `class` as a real class:** Thinking that `private #field` is just a convention. In reality, modern engines use WeakMaps or specialized internal slots to truly hide these, which has a different performance profile than prototype-based properties.
+1. **Misunderstanding Private Fields:** Thinking that native `#private` fields in ES2022 are just syntax sugar over conventions or `WeakMap` transpilation hacks. In modern V8, true private fields are implemented via internal engine slots (Private Names directly on the object structure), ensuring strong encapsulation with performance nearly identical to regular property access.
 2. **Over-Inheritance:** Building a "God Class" that inherits from 15 different levels. This is a maintenance nightmare and a performance disaster in JS.
 3. **The `this` Binding Hell:** Forgetting that methods inherited via the prototype chain lose their `this` context when passed as callbacks. 
    ```typescript

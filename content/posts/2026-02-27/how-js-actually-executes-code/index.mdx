@@ -24,7 +24,7 @@ This happens because the developer fundamentally misunderstood how JavaScript ex
 
 ## 2. WHAT IS IT REALLY?
 
-At its core, JavaScript is a **single-threaded, non-blocking, asynchronous, concurrent language**. But that’s a dense, buzzword-heavy definition. Let's break it down.
+At its core, JavaScript is a **single-threaded, non-blocking, asynchronous language**. (It achieves the *illusion* of concurrency using the Event Loop, but it does not execute multiple JS instructions simultaneously like threads in Go or Java). Let's break it down.
 
 Imagine a highly popular coffee shop (the JavaScript Engine) with exactly one Barista (the Main Thread).
 
@@ -66,7 +66,7 @@ The Event Loop is a C program (libuv) running a continuous `while(true)` loop. I
 5. **Check:** Executes `setImmediate` callbacks.
 6. **Close Callbacks:** Executes socket closure callbacks.
 
-Crucially, **Microtasks** (Promises, `queueMicrotask`) have higher priority. At the end of every phase—and even between execution of individual task queue items—Node.js drains the *entire* Microtask queue before proceeding.
+Crucially, **Microtasks** (Promises, `queueMicrotask`) have higher priority. At the end of every phase—and in modern Node.js (v11+), even between execution of individual task queue items—Node.js drains the *entire* Microtask queue before proceeding.
 
 If you block the Call Stack (e.g., via a million-iteration `while` loop), the Event Loop cannot move to the Poll phase. Network requests timeout. The server "freezes."
 
@@ -180,7 +180,7 @@ export default function processProfiles(payload: UserProfile[]) {
 
 ### Why this works:
 1. **Event Loop Freedom:** `workerPool.run()` returns a Promise. The main thread suspends execution of this specific request, returning to the Event Loop to accept thousands of other incoming HTTP connections while the math runs in the background.
-2. **V8 Optimization:** Notice the worker uses classic `for` loops instead of `Array.reduce`. While `reduce` is functionally elegant, native `for` loops map perfectly to V8's TurboFan machine instructions. Deoptimizations caused by shifting callback contexts are eliminated, usually yielding a 3x-5x speedup over functional methods on massive datasets.
+2. **V8 Optimization:** Notice the worker uses classic `for` loops instead of functional iterators. While modern V8 (TurboFan) optimizes monomorphic `reduce` callbacks extremely well (often within 10-30% of a native loop), on massive, memory-constrained datasets, a `for` loop avoids creating the sheer volume of intermediate closure contexts and allocation pressure that functional array methods generate.
 3. **Isolate Isolation:** The `worker_threads` module spins up a completely separate instance of the V8 Engine (an Isolate) with its own Heap, Call Stack, and Event Loop. 
 
 ---
@@ -210,7 +210,7 @@ How do you know if your Event Loop is choking or if V8 is deoptimizing?
 ### Measuring Event Loop Lag
 If the Event Loop is perfectly healthy, a `setTimeout(fn, 0)` should ideally execute in ~1ms. If the Call Stack is blocked, that timeout might execute in 500ms. The delta (499ms) is **Event Loop Lag**. 
 
-In Node.js 2026, we utilize the native `node:perf_hooks` module to monitor this continuously.
+In modern Node.js, we utilize the native `node:perf_hooks` module to monitor this continuously.
 
 ```typescript
 import { monitorEventLoopDelay } from 'perf_hooks';
@@ -257,15 +257,13 @@ Attackers can pipeline massive JSON arrays in the body of an HTTP request. `JSON
 
 How does our architecture evolve as we scale to millions of concurrent operations?
 
-### Vertical Scaling Limits of Node.js
-If you deploy Node.js on an 8-core AWS EC2 instance, by default, Node.js will only utilize 1 core (the main thread). You are wasting 87.5% of your computing power. 
-
-To scale vertically natively, we historically used the `cluster` module to fork 8 separate processes tied to the same port. However, in 2026, vertical scaling is rarely handled in the application layer.
+### Vertical Scaling Limit of a Single Process
+If you deploy a single Node.js process on an 8-core AWS EC2 instance, it will inherently only utilize 1 core (the main thread). However, this specific limitation is rarely an issue in modern architectures because we do not scale vertically *within* the Node process.
 
 ### Horizontal Scaling in Kubernetes
-We scale horizontally using pod replication. We deploy our Node.js application assigning `1000m` CPU (1 virtual core) per pod. We use Kubernetes HPAs (Horizontal Pod Autoscalers) to scale the number of pods from 5 to 500 based specifically on custom metrics: **Event Loop Lag** or **Memory Pressure**, *not* just CPU %.
+We scale horizontally using pod replication. We deploy our Node.js application assigning `1000m` CPU (1 virtual core) per Kubernetes pod. The Kubernetes scheduler perfectly distributes these single-threaded pods across the underlying 8-core Node. We use Kubernetes HPAs (Horizontal Pod Autoscalers) to scale the number of pods from 5 to 500 based specifically on custom metrics: **Event Loop Lag** or **Memory Pressure**, *not* just CPU %.
 
-Node.js services should be deployed as countless, tiny, stateless single-threaded workers behind a severe Load Balancer (like Envoy or ALB) rather than massive multi-threaded monoliths. 
+Node.js services are designed to be deployed as countless, tiny, stateless single-threaded workers behind a severe Load Balancer (like Envoy or ALB) rather than massive multi-threaded monoliths. 
 
 ---
 
@@ -322,8 +320,8 @@ avg_over_time(nodejs_eventloop_lag_seconds_p99{service="api-gateway"}[2m]) > 0.1
 
 Over my 12 years in MERN architecture, I have seen brilliant teams make the same Node.js execution errors repeatedly:
 
-1. **Assuming `async/await` equals Multithreading:** Passing a heavy computational function to an `async` function and assuming it runs in the background. It doesn't. `await` just tells the engine to pause the execution context of *that specific function* and clear the Microtask queue; the synchronous math inside the function still entirely blocks the main thread when executing.
-2. **Promisifying `fs.readFileSync`:** A team wrapped `fs.readFileSync` in a Promise, assuming wrapping a synchronous OS-level block in a Microtask made it non-blocking. It doesn't. The OS block halts the thread. You must use native asynchronous APIs (`fs.promises.readFile`).
+1. **Assuming `async/await` equals Backgrounding:** Passing a heavy computational function to an `async` function and assuming it runs in the background. It doesn't. `await` just tells the engine to pause the execution context of *that specific function* and clear the Microtask queue; the synchronous math inside the function still entirely blocks the main thread when executing.
+2. **Promisifying `fs.readFileSync`:** A team wrapped `fs.readFileSync` inside a Promise constructor (`new Promise(resolve => resolve(fs.readFileSync(...)))`), assuming that pushing an OS-level block into a Promise resolution made it non-blocking. It doesn't. The executor function of the Promise constructor runs *synchronously*, inline, before any microtask is even queued. The OS block violently halts the thread before the Promise is even constructed. You must use native asynchronous APIs (`fs.promises.readFile`).
 3. **Overusing `Promise.all` on massive sets:** Using `Promise.all(users.map(u => fetch(u.id)))` on an array of 5,000 items creates 5,000 parallel network sockets immediately, exhausting operating system file descriptors (EMFILE errors) and crashing the container. Senior engineers map arrays through dynamic concurrency batching (e.g., using `p-limit`).
 
 ---

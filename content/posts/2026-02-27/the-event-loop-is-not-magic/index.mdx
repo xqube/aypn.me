@@ -108,7 +108,7 @@ The developer assumed `setTimeout` running every 1000ms would interrupt the `whi
 
 When `await fetchBatch()` resolves, V8 pushes the remainder of the `async` function onto the **Microtask queue**. The synchronous piece runs, hitting the next `await`, which queues another Microtask. 
 
-Because the `while` loop continuously chains Promises, the Microtask queue never remains empty long enough for the Event Loop to hand control back to `libuv`. The `setTimeout` callback sits helplessly in the Timers (Macrotask) queue indefinitely. Furthermore, because the database connections are fast, the memory buffers fill with unresolved Microtasks, leading to the `OOMKilled` crash.
+Because the `while` loop continuously chains Promises, the Microtask queue never remains empty long enough for the Event Loop to hand control back to `libuv`. The `setTimeout` callback sits helplessly in the Timers (Macrotask) queue indefinitely. Furthermore, because the database connections are fast, the loop rapidly accumulates in-scope variables (like the `batch` arrays) across unresolved Promise closures. Combined with the GC being starved (since Major GC is a Macrotask-adjacent operation that also gets blocked), this unchecked memory accumulation leads straight to an `OOMKilled` crash.
 
 ---
 
@@ -169,7 +169,7 @@ At scale, mismanaging execution order manifests as strange, untraceable latency 
 
 ### The `process.nextTick` Trap
 In Node.js, `process.nextTick` is an anomaly. It is *not* a Web API. It operates outside the standard Microtask queue. Callbacks registered via `nextTick` are executed **before any other Microtasks**, and absolutely before any Macrotasks. 
-If a library author uses `process.nextTick` recursively (e.g., inside an event emitter or stream handler parsing a massive file chunk by chunk), it completely starves the Event Loop. Node.js documentation actively discourages `nextTick` in modern code, recommending `queueMicrotask` instead, as `queueMicrotask` behaves identically to Promise resolution.
+If a library author uses `process.nextTick` recursively (e.g., inside an event emitter or stream handler parsing a massive file chunk by chunk), it completely starves the Event Loop. Although `process.nextTick` is still the correct tool when you strictly need a callback to fire before any I/O in the current iteration—such as emitting errors from constructors before the user has had a chance to attach event listeners—it must be used with care to avoid starvation. For simple deferrals that do not require this extreme priority, `queueMicrotask` is safer as it participates in the standard Promise queue.
 
 ### Connection Pooling & Starvation
 When bulk inserting to a database, if you fire 10,000 parallel Promises using `Promise.all(items.map(insert))`, you push 10,000 items into the Microtask queue simultaneously. This violently floods your database connection pool. Connections are exhausted, and downstream services timeout waiting for a socket. 
@@ -182,7 +182,7 @@ When bulk inserting to a database, if you fire 10,000 parallel Promises using `P
 How do you optimize execution order bottlenecks when you can't visually see the queues?
 
 ### Profiling with Async Hooks
-Node.js 2026 includes native tracing for asynchronous resources. When optimizing heavy backends, we use `node:diagnostics_channel` or `--trace-event-categories v8,node.async_hooks` to map exactly how long Promises are holding the microtask queue open.
+Modern Node.js includes native tracing for asynchronous resources. When optimizing heavy backends, we use `node:diagnostics_channel` or `--trace-event-categories v8,node.async_hooks` to map exactly how long Promises are holding the microtask queue open.
 
 ### The Synchronous Payload Rule
 The most effective optimization is minimizing object parsing duration. If an API receives a 10MB JSON file, `JSON.parse` is synchronous and blocks the Call Stack. Breaking the Event Loop into phases doesn't help if the CPU is locked.
@@ -211,7 +211,7 @@ When execution yields (via `await`), the Call Stack is cleared, and other HTTP r
 
 How does our understanding of queues apply as we scale architecture?
 
-As traffic reaches $1,000,000$ users, single-threaded queue optimization in Node.js hits a ceiling. Vertical scaling of the Event Loop has rigid limits (usually around $15,000 - 30,000$ RPS for I/O heavy APIs per virtual CPU).
+As traffic reaches $1,000,000$ users, single-threaded queue optimization in Node.js hits a ceiling. Vertical scaling of the Event Loop has rigid limits (depending heavily on workload; a simple echo server might exceed 100k RPS per vCPU, while a heavy GraphQL API might struggle at 5k RPS per vCPU).
 
 At this scale, you stop trying to perfectly orchestrate Macrotasks and Microtasks for heavy jobs. 
 **The Shift to Distributed Queues:**
@@ -271,7 +271,7 @@ How do we proactively measure execution order health?
 Over years of consulting, the most frequent execution-order errors I encounter are:
 
 1. **Mixing Promisified and Callback APIs improperly:**
-   When interacting with older libraries, developers sometimes wrap a callback inside a Promise incorrectly, failing to handle errors. More insidiously, they mix `nextTick`, Promises, and `setTimeout` in the same algorithm expecting linear execution. *Rule:* In 2026, standard on `async/await` and let V8 handle the microtask resolution consistently.
+   When interacting with older libraries, developers sometimes wrap a callback inside a Promise incorrectly, failing to handle errors. More insidiously, they mix `nextTick`, Promises, and `setTimeout` in the same algorithm expecting linear execution. *Rule:* Understand exactly which queue your operation belongs to (Microtask vs Macrotask vs nextTick). If you are using streams or EventEmitters, callbacks are often the *correct* paradigm, and trying to arbitrarily force everything into `async/await` can degrade performance and obscure control flow.
 2. **The "Fire and Forget" Promise Blackhole:**
    Executing an asynchronous function in Express without `await` or a `.catch()` block:
    ```typescript
