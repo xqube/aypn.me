@@ -1,5 +1,6 @@
 const express = require('express');
 const compression = require('compression');
+const helmet = require('helmet');
 const path = require('path');
 
 const { PORT, IS_PROD } = require('./src/config');
@@ -11,6 +12,21 @@ const app = express();
 
 // Gzip/deflate compression
 app.use(compression());
+
+// Security headers
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            imgSrc: ["'self'", "data:", "https:"],
+            fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            connectSrc: ["'self'"],
+            formAction: ["'self'", "https://formsubmit.co"],
+        },
+    },
+}));
 
 // Static files with aggressive caching in production
 app.use(
