@@ -39,6 +39,9 @@ function rebuildIndexes() {
     sortedPosts = all.sort((a, b) => {
         const da = new Date(a.frontmatter.date || 0);
         const db = new Date(b.frontmatter.date || 0);
+        if (db.getTime() === da.getTime()) {
+            return b.frontmatter.slug.localeCompare(a.frontmatter.slug);
+        }
         return db - da;
     });
 
@@ -72,22 +75,21 @@ async function initCache(silent = false) {
     // Prevent memory leaks during dev hot-reloads
     cache.clear();
 
-    const entries = fs.readdirSync(POSTS_DIR, { withFileTypes: true });
-
     const filesToCompile = [];
 
-    for (const entry of entries) {
-        if (entry.isFile() && entry.name.endsWith('.mdx')) {
-            // Loose files: e.g., my-post.mdx
-            filesToCompile.push(path.join(POSTS_DIR, entry.name));
-        } else if (entry.isDirectory()) {
-            // Folder posts: e.g., my-post/index.mdx
-            const indexPath = path.join(POSTS_DIR, entry.name, 'index.mdx');
-            if (fs.existsSync(indexPath)) {
-                filesToCompile.push(indexPath);
+    function findMDXFiles(dir) {
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+        for (const entry of entries) {
+            const fullPath = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                findMDXFiles(fullPath);
+            } else if (entry.isFile() && entry.name.endsWith('.mdx')) {
+                filesToCompile.push(fullPath);
             }
         }
     }
+
+    findMDXFiles(POSTS_DIR);
 
     if (!silent) console.log(`Compiling ${filesToCompile.length} MDX post(s)...`);
     const start = Date.now();

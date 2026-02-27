@@ -1,0 +1,64 @@
+---
+title: "MDX Sample Feature Reference"
+description: "A comprehensive sample showing all MDX features supported by the AyPn blog engine for LLM context."
+date: "2026-02-27T10:00:00.000Z"
+tags: ["sample", "mdx", "reference"]
+slug: "sample-features"
+---
+
+## Headings and Table of Contents Support
+H2 and H3 headings are automatically extracted for the Table of Contents by `rehypeExtractToc`.
+The anchor IDs are generated automatically from the text.
+
+### H3 Heading Example
+This is an H3 heading.
+
+## Text Formatting (GFM)
+**Bold text**, *Italic text*, ~~Strikethrough~~.
+Tables are also supported:
+
+| Feature | Support |
+| :--- | :--- |
+| GFM | Yes |
+| MDX | Yes |
+
+## Lists and Tasklists
+- Item 1
+- Item 2
+  - Sub-item
+
+Tasklists:
+- [x] Completed task
+- [ ] Incomplete task
+
+## Code Blocks (PrismJS)
+Code blocks support syntax highlighting via `rehype-prism-plus`.
+
+```javascript
+// Example JavaScript block
+function greet(name) {
+    console.log(`Hello, ${name}!`);
+}
+```
+
+## Links and External Links
+- [Internal Link](/blog)
+- [External Link (opens in new tab)](https://example.com)
+
+External links automatically receive `target="_blank"`, `rel="noopener noreferrer"`, and a class of `external-link`.
+
+## Images
+Local images in the same folder are officially supported by `rehypeRewriteImages` which rewrites `./foo.jpg` to `/blog/{slug}/foo.jpg`. To use this, create a folder for your post, put `index.mdx` and the images inside it.
+
+![Local Image Example](./sample-image.jpg)
+
+*(Make sure to put `sample-image.jpg` in the same directory as this `index.mdx` file!)*
+
+## Raw HTML Support
+Because `rehype-raw` is enabled, you can safely embed interactive elements like Twitter or Telegram widgets, or use arbitrary HTML:
+<div style="padding: 1rem; border: 1px solid #ccc; border-radius: 8px; margin: 1rem 0;">
+  <strong>This is raw HTML rendering!</strong> You can embed `<script>` tags here too.
+</div>
+
+## Blockquotes
+> This is a standard blockquote. It allows you to emphasize quotes or important notices.
