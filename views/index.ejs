@@ -5,7 +5,7 @@
   <%- include('partials/head', { title, description, url, siteUrl }) %>
 </head>
 
-<body class="bg-gray-50 dark:bg-bg text-gray-700 dark:text-text min-h-screen flex flex-col">
+<body class="bg-surface text-content min-h-screen flex flex-col">
   <%- include('partials/header') %>
 
     <!-- ═══════════════════════════════════════════════════════
@@ -52,20 +52,20 @@
                 style="animation-duration: 2s;"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500 dark:bg-amber-500"></span>
             </span>
-            <span class="text-xs font-mono font-medium text-amber-700 dark:text-amber-400 tracking-normal">⚠️ Available for
+            <span class="text-xs font-mono font-medium text-amber-700 dark:text-amber-400 tracking-normal">⚠️ Available
+              for
               backend &amp; full-stack roles</span>
           </div>
         </div>
 
 
-        <p class="font-mono text-xs sm:text-sm text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-5">
+        <p class="font-mono text-xs sm:text-sm text-faint uppercase tracking-[0.2em] mb-5">
           <%= resume.tagline.toLowerCase() %>
         </p>
-        <h1
-          class="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-neutral-100 tracking-tight leading-[1.1] mb-5">
+        <h1 class="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-heading tracking-tight leading-[1.1] mb-5">
           <%= resume.name %>
         </h1>
-        <p class="font-mono text-base sm:text-lg text-green-600 dark:text-accent mb-6">
+        <p class="font-mono text-base sm:text-lg text-accent mb-6">
           <%= resume.title %> · <svg class="w-4 h-4 inline-block -mt-0.5" fill="none" viewBox="0 0 24 24"
               stroke="#fa8282" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -74,14 +74,14 @@
             </svg>
             <%= resume.location %>
         </p>
-        <p class="text-gray-500 dark:text-text-muted leading-relaxed max-w-xl text-base sm:text-lg">
+        <p class="text-muted leading-relaxed max-w-xl text-base sm:text-lg">
           <%= resume.summary %>
         </p>
 
         <div class="flex items-center gap-4 mt-10">
           <!-- Blog -->
           <a href="/blog"
-            class="w-10 h-10 rounded-lg border border-gray-300 dark:border-neutral-800 flex items-center justify-center text-gray-500 dark:text-neutral-500 hover:border-green-500 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent hover:bg-green-50 dark:hover:bg-accent/5 transition-all duration-200"
+            class="w-10 h-10 rounded-lg border border-line flex items-center justify-center text-muted hover:border-accent/40 hover:text-accent hover:bg-accent-soft transition-all duration-200"
             aria-label="Blog" title="Blog">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -90,7 +90,7 @@
           </a>
           <!-- GitHub -->
           <a href="<%= resume.github %>" target="_blank" rel="noopener noreferrer"
-            class="w-10 h-10 rounded-lg border border-gray-300 dark:border-neutral-800 flex items-center justify-center text-gray-500 dark:text-neutral-500 hover:border-green-500 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent hover:bg-green-50 dark:hover:bg-accent/5 transition-all duration-200"
+            class="w-10 h-10 rounded-lg border border-line flex items-center justify-center text-muted hover:border-accent/40 hover:text-accent hover:bg-accent-soft transition-all duration-200"
             aria-label="GitHub" title="GitHub">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -99,7 +99,7 @@
           </a>
           <!-- Email -->
           <a href="mailto:<%= resume.email %>"
-            class="w-10 h-10 rounded-lg border border-gray-300 dark:border-neutral-800 flex items-center justify-center text-gray-500 dark:text-neutral-500 hover:border-green-500 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent hover:bg-green-50 dark:hover:bg-accent/5 transition-all duration-200"
+            class="w-10 h-10 rounded-lg border border-line flex items-center justify-center text-muted hover:border-accent/40 hover:text-accent hover:bg-accent-soft transition-all duration-200"
             aria-label="Email" title="Email">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -112,17 +112,16 @@
 
       <!-- Scroll hint -->
       <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-        <span class="block w-px h-10 bg-gray-400 dark:bg-neutral-600"></span>
-        <span class="font-mono text-[10px] text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em]">scroll</span>
+        <span class="block w-px h-10 bg-faint"></span>
+        <span class="font-mono text-[10px] text-faint uppercase tracking-[0.2em]">scroll</span>
       </div>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
        SKILLS — Compact grid of categories
        ═══════════════════════════════════════════════════════ -->
-    <section
-      class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
-      <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+    <section class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-line">
+      <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-10">
         Technical Skills
       </h2>
       <% var skillDevicons={ 'JavaScript' : 'devicon-javascript-plain colored' , 'TypeScript'
@@ -154,15 +153,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
           <% Object.entries(resume.skills).forEach(function([category, items]) { %>
             <div>
-              <h3
-                class="font-mono text-sm font-medium text-gray-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
-                <span class="text-green-600 dark:text-accent"><%- skillIcons[category] || '' %></span>
+              <h3 class="font-mono text-sm font-medium text-heading mb-3 flex items-center gap-2">
+                <span class="text-accent"><%- skillIcons[category] || '' %></span>
                 <%= category %>
               </h3>
               <div class="flex flex-wrap gap-2">
                 <% items.forEach(function(skill) { %>
                   <span
-                    class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-400 bg-white/60 dark:bg-neutral-900/40">
+                    class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded border border-line text-muted bg-surface-alt/60">
                     <% if (skillDevicons[skill]) { %><i class="<%= skillDevicons[skill] %> text-sm"></i>
                       <% } %>
                         <%= skill %>
@@ -178,38 +176,35 @@
        EXPERIENCE — Timeline style
        ═══════════════════════════════════════════════════════ -->
     <% if (resume.experience && resume.experience.length> 0) { %>
-      <section
-        class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
-        <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+      <section class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-line">
+        <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-10">
           Experience
         </h2>
         <div class="space-y-12" id="experience-list">
           <% resume.experience.forEach(function(exp, index) { %>
-            <div
-              class="relative pl-6 border-l-2 border-green-500/30 dark:border-accent/30 <%= index >= 3 ? 'hidden hidden-experience' : '' %>">
-              <div
-                class="absolute -left-2 top-1 w-3 h-3 rounded-full bg-green-500 dark:bg-accent ring-4 ring-gray-50 dark:ring-bg">
+            <div class="relative pl-6 border-l-2 border-accent/30 <%= index >= 3 ? 'hidden hidden-experience' : '' %>">
+              <div class="absolute -left-2 top-1 w-3 h-3 rounded-full bg-accent ring-4 ring-surface">
               </div>
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-3">
                 <div>
-                  <h3 class="font-mono text-base sm:text-lg font-semibold text-gray-900 dark:text-neutral-100">
+                  <h3 class="font-mono text-base sm:text-lg font-semibold text-heading">
                     <%= exp.role %>
                   </h3>
-                  <p class="font-mono text-sm text-green-600 dark:text-accent">
+                  <p class="font-mono text-sm text-accent">
                     <%= exp.company %>
                       <% if (exp.location) { %> · <%= exp.location %>
                           <% } %>
                   </p>
                 </div>
-                <span class="font-mono text-xs text-gray-400 dark:text-neutral-600 shrink-0">
+                <span class="font-mono text-xs text-faint shrink-0">
                   <%= exp.period %>
                 </span>
               </div>
               <ul class="space-y-2.5 mt-4">
                 <% exp.highlights.forEach(function(h) { %>
                   <li class="flex items-start gap-3">
-                    <span class="shrink-0 w-1 h-1 rounded-full bg-gray-300 dark:bg-neutral-700 mt-2.5"></span>
-                    <span class="text-sm text-gray-600 dark:text-neutral-400 leading-relaxed">
+                    <span class="shrink-0 w-1 h-1 rounded-full bg-line mt-2.5"></span>
+                    <span class="text-sm text-muted leading-relaxed">
                       <%= h %>
                     </span>
                   </li>
@@ -222,7 +217,7 @@
         <% if (resume.experience.length> 3) { %>
           <div class="mt-10 flex justify-center">
             <button id="toggle-experience"
-              class="font-mono text-xs text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim uppercase tracking-[0.1em] px-4 py-2 border border-green-200 dark:border-accent/20 rounded-full transition-colors duration-200 bg-white/50 dark:bg-neutral-900/30">
+              class="font-mono text-xs text-accent hover:text-accent-hover uppercase tracking-[0.1em] px-4 py-2 border border-accent/20 rounded-full transition-colors duration-200 bg-surface-alt/50">
               Show All Experience (<%= resume.experience.length %>) &darr;
             </button>
           </div>
@@ -234,31 +229,30 @@
        PROJECTS — Card grid, generous spacing
        ═══════════════════════════════════════════════════════ -->
         <% if (projects && projects.length> 0) { %>
-          <section
-            class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
-            <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-8">
+          <section class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-line">
+            <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-8">
               Projects
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5" id="projects-list">
               <% projects.forEach(function(project, index) { %>
                 <% if (project.url) { %>
                   <a href="<%= project.url %>" target="_blank" rel="noopener noreferrer"
-                    class="contact-card group block border border-gray-200 dark:border-neutral-800 rounded-lg p-5 sm:p-6 bg-white/50 dark:bg-neutral-900/30 hover:border-green-500/50 dark:hover:border-accent/40 transition-all duration-200 <%= index >= 4 ? 'hidden hidden-project' : '' %>">
+                    class="contact-card group block border border-line rounded-lg p-5 sm:p-6 bg-surface-alt/50 hover:border-accent/40 transition-all duration-200 <%= index >= 4 ? 'hidden hidden-project' : '' %>">
                     <div class="flex items-center gap-2 mb-2">
                       <h3
-                        class="font-mono text-sm sm:text-base font-semibold text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-200">
+                        class="font-mono text-sm sm:text-base font-semibold text-heading group-hover:text-accent transition-colors duration-200">
                         <%= project.name %>
                       </h3>
                       <span
-                        class="text-gray-400 dark:text-neutral-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">↗</span>
+                        class="text-faint text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">↗</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-text-muted leading-relaxed mb-3">
+                    <p class="text-sm text-muted leading-relaxed mb-3">
                       <%= project.description %>
                     </p>
                     <div class="flex flex-wrap gap-3">
                       <% project.tech.forEach(function(t) { %>
                         <span
-                          class="inline-block text-[11px] font-mono font-medium px-2.5 py-1 rounded border border-green-200 dark:border-accent/20 text-green-700 dark:text-accent bg-green-50 dark:bg-accent/10">
+                          class="inline-block text-[11px] font-mono font-medium px-2.5 py-1 rounded border border-accent/20 text-accent bg-accent-soft">
                           <%= t %>
                         </span>
                         <% }); %>
@@ -266,17 +260,17 @@
                   </a>
                   <% } else { %>
                     <div
-                      class="contact-card border border-gray-200 dark:border-neutral-800 rounded-lg p-5 sm:p-6 bg-white/50 dark:bg-neutral-900/30 <%= index >= 4 ? 'hidden hidden-project' : '' %>">
-                      <h3 class="font-mono text-sm sm:text-base font-semibold text-gray-900 dark:text-neutral-100 mb-2">
+                      class="contact-card border border-line rounded-lg p-5 sm:p-6 bg-surface-alt/50 <%= index >= 4 ? 'hidden hidden-project' : '' %>">
+                      <h3 class="font-mono text-sm sm:text-base font-semibold text-heading mb-2">
                         <%= project.name %>
                       </h3>
-                      <p class="text-sm text-gray-500 dark:text-text-muted leading-relaxed mb-3">
+                      <p class="text-sm text-muted leading-relaxed mb-3">
                         <%= project.description %>
                       </p>
                       <div class="flex flex-wrap gap-3">
                         <% project.tech.forEach(function(t) { %>
                           <span
-                            class="inline-block text-[11px] font-mono font-medium px-2.5 py-1 rounded border border-green-200 dark:border-accent/20 text-green-700 dark:text-accent bg-green-50 dark:bg-accent/10">
+                            class="inline-block text-[11px] font-mono font-medium px-2.5 py-1 rounded border border-accent/20 text-accent bg-accent-soft">
                             <%= t %>
                           </span>
                           <% }); %>
@@ -289,7 +283,7 @@
             <% if (projects.length> 4) { %>
               <div class="mt-10 flex justify-center">
                 <button id="toggle-projects"
-                  class="font-mono text-xs text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim uppercase tracking-[0.1em] px-4 py-2 border border-green-200 dark:border-accent/20 rounded-full transition-colors duration-200 bg-white/50 dark:bg-neutral-900/30">
+                  class="font-mono text-xs text-accent hover:text-accent-hover uppercase tracking-[0.1em] px-4 py-2 border border-accent/20 rounded-full transition-colors duration-200 bg-surface-alt/50">
                   View All Projects (<%= projects.length %>) &darr;
                 </button>
               </div>
@@ -300,31 +294,29 @@
             <!-- ═══════════════════════════════════════════════════════
        EDUCATION & CERTIFICATIONS — Side by side
        ═══════════════════════════════════════════════════════ -->
-            <section
-              class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
+            <section class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-line">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16">
 
                 <!-- Education -->
                 <% if (resume.education && resume.education.length> 0) { %>
                   <div>
-                    <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-8">
+                    <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-8">
                       Education
                     </h2>
                     <div class="space-y-8">
                       <% resume.education.forEach(function(edu) { %>
                         <div>
-                          <h3
-                            class="font-mono text-sm sm:text-base font-semibold text-gray-900 dark:text-neutral-100 leading-snug">
+                          <h3 class="font-mono text-sm sm:text-base font-semibold text-heading leading-snug">
                             <%= edu.degree %>
                           </h3>
-                          <p class="text-sm text-green-600 dark:text-accent font-mono mt-1">
+                          <p class="text-sm text-accent font-mono mt-1">
                             <%= edu.institution %>
                           </p>
-                          <p class="text-xs text-gray-400 dark:text-neutral-600 font-mono mt-1">
+                          <p class="text-xs text-faint font-mono mt-1">
                             <%= edu.period %>
                           </p>
                           <% if (edu.highlights && edu.highlights.length> 0) { %>
-                            <p class="text-sm text-gray-500 dark:text-neutral-400 mt-3 leading-relaxed">
+                            <p class="text-sm text-muted mt-3 leading-relaxed">
                               <%= edu.highlights[0] %>
                             </p>
                             <% } %>
@@ -337,21 +329,19 @@
                     <!-- Certifications -->
                     <% if (resume.certifications && resume.certifications.length> 0) { %>
                       <div>
-                        <h2
-                          class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-8">
+                        <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-8">
                           Certifications
                         </h2>
                         <div class="space-y-6">
                           <% resume.certifications.forEach(function(cert) { %>
-                            <div class="relative pl-5 border-l border-gray-200 dark:border-neutral-800">
-                              <h3
-                                class="font-mono text-sm font-semibold text-gray-900 dark:text-neutral-100 leading-snug">
+                            <div class="relative pl-5 border-l border-line">
+                              <h3 class="font-mono text-sm font-semibold text-heading leading-snug">
                                 <%= cert.name %>
                               </h3>
-                              <p class="text-xs text-gray-400 dark:text-neutral-600 font-mono mt-1">
+                              <p class="text-xs text-faint font-mono mt-1">
                                 <%= cert.issuer %> · <%= cert.year %>
                               </p>
-                              <p class="text-sm text-gray-500 dark:text-neutral-400 mt-2 leading-relaxed">
+                              <p class="text-sm text-muted mt-2 leading-relaxed">
                                 <%= cert.description %>
                               </p>
                             </div>
@@ -367,9 +357,8 @@
        BLOG — New & Trending side by side
        ═══════════════════════════════════════════════════════ -->
             <% if ((latestPosts && latestPosts.length> 0) || (trendingPosts && trendingPosts.length > 0)) { %>
-              <section
-                class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
-                <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+              <section class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-line">
+                <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-10">
                   From the Blog
                 </h2>
 
@@ -378,9 +367,8 @@
                   <!-- New -->
                   <% if (latestPosts && latestPosts.length> 0) { %>
                     <div>
-                      <h3
-                        class="font-mono text-sm font-medium text-gray-900 dark:text-neutral-100 mb-6 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-green-500 dark:bg-accent inline-block"></span>
+                      <h3 class="font-mono text-sm font-medium text-heading mb-6 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-accent inline-block"></span>
                         New
                       </h3>
                       <ul class="space-y-6">
@@ -388,19 +376,18 @@
                           <li>
                             <a href="/blog/<%= post.frontmatter.slug %>" class="group block">
                               <span
-                                class="font-mono text-base text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-200 leading-snug block">
+                                class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-200 leading-snug block">
                                 <%= post.frontmatter.title %>
                               </span>
                               <div class="flex items-center gap-3 mt-1.5">
-                                <time datetime="<%= post.frontmatter.date %>"
-                                  class="text-xs text-gray-400 dark:text-neutral-600 font-mono">
+                                <time datetime="<%= post.frontmatter.date %>" class="text-xs text-faint font-mono">
                                   <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' ,
                                     month: 'short' , day: 'numeric' }) %>
                                 </time>
                                 <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
                                   <div class="flex gap-1.5">
                                     <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
-                                      <span class="text-xs font-mono text-green-600/50 dark:text-accent/50">
+                                      <span class="text-xs font-mono text-accent/50">
                                         <%= tag %>
                                       </span>
                                       <% }); %>
@@ -408,7 +395,7 @@
                                   <% } %>
                               </div>
                               <% if (post.frontmatter.description) { %>
-                                <p class="text-sm text-gray-500 dark:text-text-muted mt-2 leading-relaxed">
+                                <p class="text-sm text-muted mt-2 leading-relaxed">
                                   <%= post.frontmatter.description %>
                                 </p>
                                 <% } %>
@@ -422,27 +409,25 @@
                       <!-- Trending -->
                       <% if (trendingPosts && trendingPosts.length> 0) { %>
                         <div>
-                          <h3
-                            class="font-mono text-sm font-medium text-gray-900 dark:text-neutral-100 mb-6 flex items-center gap-2">
+                          <h3 class="font-mono text-sm font-medium text-heading mb-6 flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
                             Trending
                           </h3>
                           <ul class="space-y-6">
                             <% trendingPosts.forEach(function(post, i) { %>
                               <li class="flex items-start gap-4">
-                                <span
-                                  class="text-2xl font-mono text-gray-200 dark:text-neutral-800 leading-none mt-0.5 shrink-0 select-none">
+                                <span class="text-2xl font-mono text-line leading-none mt-0.5 shrink-0 select-none">
                                   <%= String(i + 1).padStart(2, '0' ) %>
                                 </span>
                                 <a href="/blog/<%= post.frontmatter.slug %>" class="group">
                                   <span
-                                    class="font-mono text-base text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-200 leading-snug block">
+                                    class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-200 leading-snug block">
                                     <%= post.frontmatter.title %>
                                   </span>
                                   <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
                                     <div class="flex gap-1.5 mt-1.5">
                                       <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
-                                        <span class="text-xs font-mono text-green-600/50 dark:text-accent/50">
+                                        <span class="text-xs font-mono text-accent/50">
                                           <%= tag %>
                                         </span>
                                         <% }); %>
@@ -459,7 +444,7 @@
 
                 <div class="mt-12">
                   <a href="/blog"
-                    class="inline-flex items-center gap-2 font-mono text-sm text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim transition-colors duration-200">
+                    class="inline-flex items-center gap-2 font-mono text-sm text-accent hover:text-accent-hover transition-colors duration-200">
                     all posts <span>&rarr;</span>
                   </a>
                 </div>
@@ -469,9 +454,8 @@
                 <!-- ═══════════════════════════════════════════════════════
        CONTACT — Two-column: info + form
        ═══════════════════════════════════════════════════════ -->
-                <section id="contact"
-                  class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-gray-200 dark:border-neutral-800">
-                  <h2 class="font-mono text-xs text-gray-400 dark:text-neutral-600 uppercase tracking-[0.2em] mb-10">
+                <section id="contact" class="w-full max-w-3xl mx-auto px-6 sm:px-8 py-20 sm:py-28 border-t border-line">
+                  <h2 class="font-mono text-xs text-faint uppercase tracking-[0.2em] mb-10">
                     Get In Touch
                   </h2>
 
@@ -480,7 +464,7 @@
                     <!-- ── Left: Contact Info ─────────────────────────────── -->
                     <div class="md:col-span-2 space-y-8">
                       <div>
-                        <p class="text-gray-500 dark:text-text-muted leading-relaxed text-sm">
+                        <p class="text-muted leading-relaxed text-sm">
                           Open to new opportunities, collaborations, and interesting conversations. Feel free to reach
                           out.
                         </p>
@@ -489,9 +473,9 @@
                       <div class="space-y-5">
                         <!-- Email -->
                         <a href="mailto:<%= resume.email %>"
-                          class="group flex items-center gap-3 text-sm text-gray-600 dark:text-neutral-400 hover:text-green-600 dark:hover:text-accent transition-colors duration-200">
+                          class="group flex items-center gap-3 text-sm text-muted hover:text-accent transition-colors duration-200">
                           <span
-                            class="shrink-0 w-8 h-8 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 group-hover:border-green-500/50 dark:group-hover:border-accent/40 group-hover:text-green-600 dark:group-hover:text-accent transition-all duration-200">
+                            class="shrink-0 w-8 h-8 rounded-lg border border-line flex items-center justify-center text-faint group-hover:border-accent/40 group-hover:text-accent transition-all duration-200">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                               stroke-width="1.5">
                               <path stroke-linecap="round" stroke-linejoin="round"
@@ -505,9 +489,9 @@
 
                         <!-- Phone -->
                         <a href="tel:<%= resume.phone %>"
-                          class="group flex items-center gap-3 text-sm text-gray-600 dark:text-neutral-400 hover:text-green-600 dark:hover:text-accent transition-colors duration-200">
+                          class="group flex items-center gap-3 text-sm text-muted hover:text-accent transition-colors duration-200">
                           <span
-                            class="shrink-0 w-8 h-8 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 group-hover:border-green-500/50 dark:group-hover:border-accent/40 group-hover:text-green-600 dark:group-hover:text-accent transition-all duration-200">
+                            class="shrink-0 w-8 h-8 rounded-lg border border-line flex items-center justify-center text-faint group-hover:border-accent/40 group-hover:text-accent transition-all duration-200">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                               stroke-width="1.5">
                               <path stroke-linecap="round" stroke-linejoin="round"
@@ -520,9 +504,9 @@
                         </a>
 
                         <!-- Location -->
-                        <div class="flex items-center gap-3 text-sm text-gray-600 dark:text-neutral-400">
+                        <div class="flex items-center gap-3 text-sm text-muted">
                           <span
-                            class="shrink-0 w-8 h-8 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600">
+                            class="shrink-0 w-8 h-8 rounded-lg border border-line flex items-center justify-center text-faint">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                               stroke-width="1.5">
                               <path stroke-linecap="round" stroke-linejoin="round"
@@ -540,7 +524,7 @@
                       <!-- Social Links -->
                       <div class="flex items-center gap-3 pt-2">
                         <a href="<%= resume.github %>" target="_blank" rel="noopener noreferrer"
-                          class="w-9 h-9 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 hover:border-green-500/50 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent transition-all duration-200"
+                          class="w-9 h-9 rounded-lg border border-line flex items-center justify-center text-faint hover:border-accent/40 hover:text-accent transition-all duration-200"
                           aria-label="GitHub">
                           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -549,7 +533,7 @@
                         </a>
                         <% if (resume.linkedin) { %>
                           <a href="<%= resume.linkedin %>" target="_blank" rel="noopener noreferrer"
-                            class="w-9 h-9 rounded-lg border border-gray-200 dark:border-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-600 hover:border-green-500/50 dark:hover:border-accent/40 hover:text-green-600 dark:hover:text-accent transition-all duration-200"
+                            class="w-9 h-9 rounded-lg border border-line flex items-center justify-center text-faint hover:border-accent/40 hover:text-accent transition-all duration-200"
                             aria-label="LinkedIn">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                               <path
@@ -564,7 +548,7 @@
                     <div class="md:col-span-3">
                       <form id="contact-form" action="https://formsubmit.co/<%= resume.email %>" method="POST"
                         novalidate
-                        class="contact-card border border-gray-200 dark:border-neutral-800 rounded-lg p-6 sm:p-8 bg-white/50 dark:bg-neutral-900/30 space-y-6">
+                        class="contact-card border border-line rounded-lg p-6 sm:p-8 bg-surface-alt/50 space-y-6">
 
                         <!-- Honeypot & Config -->
                         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
@@ -576,24 +560,24 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                           <div>
                             <label for="contact-name"
-                              class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Name</label>
+                              class="block font-mono text-xs text-muted uppercase tracking-wider mb-2">Name</label>
                             <input type="text" id="contact-name" name="name" required placeholder="Your Name"
-                              class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 placeholder-gray-400 dark:placeholder-neutral-600 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200">
+                              class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-line bg-surface-alt text-heading placeholder-faint focus:border-accent focus:outline-none transition-colors duration-200">
                           </div>
                           <div>
                             <label for="contact-email"
-                              class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Email</label>
+                              class="block font-mono text-xs text-muted uppercase tracking-wider mb-2">Email</label>
                             <input type="email" id="contact-email" name="email" required placeholder="your@email.com"
-                              class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 placeholder-gray-400 dark:placeholder-neutral-600 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200">
+                              class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-line bg-surface-alt text-heading placeholder-faint focus:border-accent focus:outline-none transition-colors duration-200">
                           </div>
                         </div>
 
                         <!-- Subject -->
                         <div>
                           <label for="contact-subject"
-                            class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Subject</label>
+                            class="block font-mono text-xs text-muted uppercase tracking-wider mb-2">Subject</label>
                           <select id="contact-subject" name="_subject" required
-                            class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200 appearance-none cursor-pointer"
+                            class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-line bg-surface-alt text-heading focus:border-accent focus:outline-none transition-colors duration-200 appearance-none cursor-pointer"
                             style="background-image: url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e&quot;); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
                             <option value="Job Opportunity">Job Opportunity</option>
                             <option value="Interview Request">Interview Request</option>
@@ -605,14 +589,14 @@
                         <!-- Message -->
                         <div>
                           <label for="contact-message"
-                            class="block font-mono text-xs text-gray-500 dark:text-neutral-500 uppercase tracking-wider mb-2">Message</label>
+                            class="block font-mono text-xs text-muted uppercase tracking-wider mb-2">Message</label>
                           <textarea id="contact-message" name="message" required rows="4" placeholder="Your message..."
-                            class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-gray-900 dark:text-neutral-100 placeholder-gray-400 dark:placeholder-neutral-600 focus:border-green-500 dark:focus:border-accent focus:outline-none transition-colors duration-200 resize-none"></textarea>
+                            class="contact-input w-full font-mono text-sm px-3.5 py-2.5 rounded-md border border-line bg-surface-alt text-heading placeholder-faint focus:border-accent focus:outline-none transition-colors duration-200 resize-none"></textarea>
                         </div>
 
                         <!-- Submit -->
                         <button type="submit" id="contact-submit"
-                          class="inline-flex items-center gap-2 font-mono text-sm font-medium px-6 py-2.5 rounded-md bg-green-600 dark:bg-accent text-white dark:text-neutral-900 hover:bg-green-700 dark:hover:bg-accent-dim transition-colors duration-200 shadow-lg shadow-green-600/20 dark:shadow-accent/20">
+                          class="inline-flex items-center gap-2 font-mono text-sm font-medium px-6 py-2.5 rounded-md bg-accent text-white dark:text-neutral-900 hover:bg-accent-hover transition-colors duration-200 shadow-lg shadow-accent/20">
                           Send Message
                           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"

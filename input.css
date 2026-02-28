@@ -50,8 +50,8 @@
     max-width: 420px;
     padding: 14px 16px;
     border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    background: #fff;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-alt);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06);
     position: relative;
     overflow: hidden;
@@ -61,8 +61,6 @@
   }
 
   .dark .toast-notification {
-    background: #1a1a1a;
-    border-color: #2a2a2a;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 1px rgba(74, 222, 128, 0.1);
   }
 
@@ -89,12 +87,7 @@
 
   .toast-icon--success {
     background: rgba(74, 222, 128, 0.12);
-    color: #16a34a;
-  }
-
-  .dark .toast-icon--success {
-    background: rgba(74, 222, 128, 0.1);
-    color: #4ade80;
+    color: var(--color-accent);
   }
 
   .toast-icon--error {
@@ -103,7 +96,6 @@
   }
 
   .dark .toast-icon--error {
-    background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
   }
 
@@ -116,31 +108,23 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text-heading);
     margin: 0 0 2px;
     line-height: 1.4;
-  }
-
-  .dark .toast-title {
-    color: #e5e5e5;
   }
 
   .toast-msg {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--color-text-muted);
     margin: 0;
     line-height: 1.5;
-  }
-
-  .dark .toast-msg {
-    color: #737373;
   }
 
   .toast-close {
     flex-shrink: 0;
     padding: 2px;
-    color: #9ca3af;
+    color: var(--color-text-faint);
     cursor: pointer;
     background: none;
     border: none;
@@ -149,16 +133,11 @@
   }
 
   .toast-close:hover {
-    color: #374151;
+    color: var(--color-text-heading);
     background: rgba(0, 0, 0, 0.04);
   }
 
-  .dark .toast-close {
-    color: #525252;
-  }
-
   .dark .toast-close:hover {
-    color: #d4d4d4;
     background: rgba(255, 255, 255, 0.04);
   }
 
@@ -184,7 +163,7 @@
   }
 
   .toast-progress--success {
-    background: #4ade80;
+    background: var(--color-accent);
   }
 
   .toast-progress--error {
@@ -212,10 +191,10 @@
   top: 8px;
   right: 8px;
   padding: 6px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: #f9fafb;
-  color: #9ca3af;
+  background: var(--color-bg);
+  color: var(--color-text-faint);
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.15s, color 0.15s, background 0.15s, border-color 0.15s;
@@ -223,62 +202,91 @@
   line-height: 0;
 }
 
-.dark .code-copy-btn {
-  border-color: #333;
-  background: #1a1a1a;
-  color: #525252;
-}
-
 .code-copy-wrap:hover .code-copy-btn {
   opacity: 1;
 }
 
 .code-copy-btn:hover {
-  color: #374151;
-  border-color: #9ca3af;
-  background: #f3f4f6;
-}
-
-.dark .code-copy-btn:hover {
-  color: #d4d4d4;
-  border-color: #525252;
-  background: #262626;
+  color: var(--color-text-heading);
+  border-color: var(--color-text-faint);
+  background: var(--color-bg-alt);
 }
 
 .code-copy-btn--copied {
-  color: #16a34a !important;
-  border-color: #16a34a !important;
-}
-
-.dark .code-copy-btn--copied {
-  color: #4ade80 !important;
-  border-color: #4ade80 !important;
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
 }
 
 /*
  * Theme: Dark/Light mode via .dark class on <html>.
- * Colors reference theme.config.js. Edit there, rebuild CSS.
- *
- * Dark palette:
- *   bg: #0f0f0f  text: #d4d4d4  heading: #e5e5e5  accent: #4ade80
- *
- * Light palette:
- *   bg: #fafafa   text: #374151  heading: #111827  accent: #16a34a
+ * Colors reference CSS variables defined below.
+ * Variables auto-switch — no .dark overrides needed for most rules.
  */
 
 @layer base {
 
-  /* ── Light mode (default if no .dark class) ──────────────── */
-  html {
-    background-color: #fafafa;
-    color: #374151;
-    scroll-behavior: smooth;
+  /* ── CSS Custom Properties ──────────────────────────────── */
+  :root {
+    --color-bg: #fafafa;
+    --color-bg-alt: #ffffff;
+    --color-bg-code: #f3f4f6;
+    --color-bg-inline: #e5e7eb;
+    --color-border: #d1d5db;
+    --color-border-subtle: #e5e7eb;
+    --color-text: #374151;
+    --color-text-heading: #111827;
+    --color-text-muted: #6b7280;
+    --color-text-faint: #9ca3af;
+    --color-accent: #16a34a;
+    --color-accent-hover: #15803d;
+    --color-accent-soft: #dcfce7;
+
+    /* Syntax highlighting */
+    --hl-keyword: #7c3aed;
+    --hl-string: #16a34a;
+    --hl-comment: #9ca3af;
+    --hl-function: #2563eb;
+    --hl-number: #d97706;
+    --hl-builtin: #db2777;
+    --hl-type: #0891b2;
+    --hl-variable: #ea580c;
+    --hl-attr: #16a34a;
+    --hl-punctuation: #6b7280;
   }
 
-  /* ── Dark mode ───────────────────────────────────────────── */
-  html.dark {
-    background-color: #0f0f0f;
-    color: #d4d4d4;
+  .dark {
+    --color-bg: #0f0f0f;
+    --color-bg-alt: #161616;
+    --color-bg-code: #111111;
+    --color-bg-inline: #1a1a1a;
+    --color-border: #262626;
+    --color-border-subtle: #1f1f1f;
+    --color-text: #d4d4d4;
+    --color-text-heading: #e5e5e5;
+    --color-text-muted: #737373;
+    --color-text-faint: #525252;
+    --color-accent: #4ade80;
+    --color-accent-hover: #22c55e;
+    --color-accent-soft: rgba(74, 222, 128, 0.1);
+
+    /* Syntax highlighting */
+    --hl-keyword: #c084fc;
+    --hl-string: #4ade80;
+    --hl-comment: #525252;
+    --hl-function: #60a5fa;
+    --hl-number: #f59e0b;
+    --hl-builtin: #f472b6;
+    --hl-type: #22d3ee;
+    --hl-variable: #fb923c;
+    --hl-attr: #4ade80;
+    --hl-punctuation: #a3a3a3;
+  }
+
+  /* ── Light/Dark base ────────────────────────────────────── */
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    scroll-behavior: smooth;
   }
 
   /* Anchor offset for fixed header */
@@ -289,14 +297,10 @@
 
   /* ── Tree-structure TOC ─────────────────────────────────── */
   .toc-tree {
-    border-left: 1px solid #d1d5db;
+    border-left: 1px solid var(--color-border);
     padding-left: 0;
     list-style: none;
     margin: 0;
-  }
-
-  .dark .toc-tree {
-    border-left-color: #333;
   }
 
   .toc-item {
@@ -311,11 +315,7 @@
     top: 0.75em;
     width: 10px;
     height: 1px;
-    background: #d1d5db;
-  }
-
-  .dark .toc-item::before {
-    background: #333;
+    background: var(--color-border);
   }
 
   /* Nested subtree (h3 children under h2) */
@@ -323,11 +323,7 @@
     list-style: none;
     padding-left: 0;
     margin: 2px 0 2px 14px;
-    border-left: 1px solid #d1d5db;
-  }
-
-  .dark .toc-subtree {
-    border-left-color: #333;
+    border-left: 1px solid var(--color-border);
   }
 
   .toc-sub {
@@ -343,50 +339,30 @@
       'Liberation Mono', 'Courier New', monospace;
     font-size: 0.8125rem;
     line-height: 1.75;
-    color: #6b7280;
+    color: var(--color-text-muted);
     text-decoration: none;
     transition: color 0.15s;
   }
 
   .toc-link:hover {
-    color: #16a34a;
-  }
-
-  .dark .toc-link {
-    color: #737373;
-  }
-
-  .dark .toc-link:hover {
-    color: #4ade80;
+    color: var(--color-accent);
   }
 
   .toc-link-sub {
     font-size: 0.75rem;
-    color: #9ca3af;
-  }
-
-  .dark .toc-link-sub {
-    color: #525252;
+    color: var(--color-text-faint);
   }
 
   .toc-link-sub:hover {
-    color: #16a34a;
-  }
-
-  .dark .toc-link-sub:hover {
-    color: #4ade80;
+    color: var(--color-accent);
   }
 
   /* ── Mobile collapsible TOC ─────────────────────────────── */
   .toc-mobile {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     padding: 0;
     overflow: hidden;
-  }
-
-  .dark .toc-mobile {
-    border-color: #262626;
   }
 
   .toc-mobile-toggle {
@@ -400,7 +376,7 @@
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #6b7280;
+    color: var(--color-text-muted);
     list-style: none;
     user-select: none;
     transition: background-color 0.15s;
@@ -411,15 +387,7 @@
   }
 
   .toc-mobile-toggle:hover {
-    background-color: #f3f4f6;
-  }
-
-  .dark .toc-mobile-toggle {
-    color: #737373;
-  }
-
-  .dark .toc-mobile-toggle:hover {
-    background-color: #171717;
+    background-color: var(--color-bg-alt);
   }
 
   .toc-chevron {
@@ -454,14 +422,7 @@
       'Liberation Mono', 'Courier New', monospace;
     font-weight: 600;
     letter-spacing: -0.01em;
-    color: #111827;
-  }
-
-  .dark .prose h1,
-  .dark .prose h2,
-  .dark .prose h3,
-  .dark .prose h4 {
-    color: #e5e5e5;
+    color: var(--color-text-heading);
   }
 
   .prose h1 {
@@ -493,22 +454,14 @@
   }
 
   .prose a {
-    color: #16a34a;
+    color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.15s ease;
   }
 
-  .dark .prose a {
-    color: #4ade80;
-  }
-
   .prose a:hover {
-    color: #15803d;
-  }
-
-  .dark .prose a:hover {
-    color: #22c55e;
+    color: var(--color-accent-hover);
   }
 
   .prose a.external-link::after {
@@ -521,12 +474,8 @@
   }
 
   .prose strong {
-    color: #111827;
+    color: var(--color-text-heading);
     font-weight: 600;
-  }
-
-  .dark .prose strong {
-    color: #e5e5e5;
   }
 
   .prose ul,
@@ -548,51 +497,33 @@
   }
 
   .prose li strong {
-    color: #111827;
-  }
-
-  .dark .prose li strong {
-    color: #e5e5e5;
+    color: var(--color-text-heading);
   }
 
   .prose blockquote {
-    border-left: 3px solid #16a34a;
+    border-left: 3px solid var(--color-accent);
     padding-left: 1rem;
     margin: 1.5rem 0;
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-style: italic;
-  }
-
-  .dark .prose blockquote {
-    border-left-color: #4ade80;
-    color: #a3a3a3;
   }
 
   .prose code {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
       'Liberation Mono', 'Courier New', monospace;
-    background-color: #e5e7eb;
+    background-color: var(--color-bg-inline);
     padding: 0.15rem 0.35rem;
     border-radius: 0.25rem;
     font-size: 0.875em;
   }
 
-  .dark .prose code {
-    background-color: #1a1a1a;
-  }
-
   .prose pre {
-    background-color: #f3f4f6;
-    border: 1px solid #d1d5db;
+    background-color: var(--color-bg-code);
+    border: 1px solid var(--color-border);
     border-radius: 0.375rem;
     padding: 1rem;
     overflow-x: auto;
     margin: 1.5rem 0;
-  }
-
-  .dark .prose pre {
-    background-color: #111;
-    border-color: #262626;
   }
 
   .prose pre code {
@@ -601,20 +532,12 @@
     border-radius: 0;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: #374151;
-  }
-
-  .dark .prose pre code {
-    color: #d4d4d4;
+    color: var(--color-text);
   }
 
   .prose hr {
-    border-color: #d1d5db;
+    border-color: var(--color-border);
     margin: 2rem 0;
-  }
-
-  .dark .prose hr {
-    border-color: #262626;
   }
 
   .prose table {
@@ -625,25 +548,15 @@
 
   .prose th,
   .prose td {
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--color-border);
     padding: 0.5rem 0.75rem;
     text-align: left;
   }
 
-  .dark .prose th,
-  .dark .prose td {
-    border-color: #262626;
-  }
-
   .prose th {
-    background-color: #f3f4f6;
+    background-color: var(--color-bg-code);
     font-weight: 600;
-    color: #111827;
-  }
-
-  .dark .prose th {
-    background-color: #161616;
-    color: #e5e5e5;
+    color: var(--color-text-heading);
   }
 
   .prose img {
@@ -657,27 +570,24 @@
 /*
  * ── Syntax Highlighting (Prism.js via rehype-prism-plus) ────
  * Outside @layer to survive Tailwind purge.
- *
- * Light mode uses a muted palette; dark mode uses vivid colors.
- * Tokens are applied at compile time (SSR) — zero client JS.
+ * Uses CSS variables that auto-switch between light/dark.
  */
 
-/* Light mode */
 code[class*="language-"],
 pre[class*="language-"] {
-  color: #374151;
+  color: var(--color-text);
 }
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #9ca3af;
+  color: var(--hl-comment);
   font-style: italic;
 }
 
 .token.punctuation {
-  color: #6b7280;
+  color: var(--hl-punctuation);
 }
 
 .token.keyword,
@@ -685,52 +595,52 @@ pre[class*="language-"] {
 .token.boolean,
 .token.constant,
 .token.symbol {
-  color: #7c3aed;
+  color: var(--hl-keyword);
 }
 
 .token.string,
 .token.char,
 .token.attr-value,
 .token.inserted {
-  color: #16a34a;
+  color: var(--hl-string);
 }
 
 .token.function,
 .token.class-name,
 .token.selector {
-  color: #2563eb;
+  color: var(--hl-function);
 }
 
 .token.number {
-  color: #d97706;
+  color: var(--hl-number);
 }
 
 .token.builtin {
-  color: #db2777;
+  color: var(--hl-builtin);
 }
 
 .token.attr-name,
 .token.property {
-  color: #16a34a;
+  color: var(--hl-attr);
 }
 
 .token.variable {
-  color: #ea580c;
+  color: var(--hl-variable);
 }
 
 .token.operator,
 .token.entity,
 .token.url {
-  color: #6b7280;
+  color: var(--hl-punctuation);
 }
 
 .token.regex,
 .token.important {
-  color: #d97706;
+  color: var(--hl-number);
 }
 
 .token.atrule {
-  color: #7c3aed;
+  color: var(--hl-keyword);
 }
 
 .token.deleted {
@@ -739,7 +649,7 @@ pre[class*="language-"] {
 }
 
 .token.inserted {
-  color: #16a34a;
+  color: var(--hl-string);
   background-color: rgba(22, 163, 74, 0.08);
 }
 
@@ -750,85 +660,4 @@ pre[class*="language-"] {
 
 .token.italic {
   font-style: italic;
-}
-
-/* Dark mode overrides */
-.dark code[class*="language-"],
-.dark pre[class*="language-"] {
-  color: #d4d4d4;
-}
-
-.dark .token.comment,
-.dark .token.prolog,
-.dark .token.doctype,
-.dark .token.cdata {
-  color: #525252;
-  font-style: italic;
-}
-
-.dark .token.punctuation {
-  color: #a3a3a3;
-}
-
-.dark .token.keyword,
-.dark .token.tag,
-.dark .token.boolean,
-.dark .token.constant,
-.dark .token.symbol {
-  color: #c084fc;
-}
-
-.dark .token.string,
-.dark .token.char,
-.dark .token.attr-value,
-.dark .token.inserted {
-  color: #4ade80;
-}
-
-.dark .token.function,
-.dark .token.class-name,
-.dark .token.selector {
-  color: #60a5fa;
-}
-
-.dark .token.number {
-  color: #f59e0b;
-}
-
-.dark .token.builtin {
-  color: #f472b6;
-}
-
-.dark .token.attr-name,
-.dark .token.property {
-  color: #4ade80;
-}
-
-.dark .token.variable {
-  color: #fb923c;
-}
-
-.dark .token.operator,
-.dark .token.entity,
-.dark .token.url {
-  color: #a3a3a3;
-}
-
-.dark .token.regex,
-.dark .token.important {
-  color: #f59e0b;
-}
-
-.dark .token.atrule {
-  color: #c084fc;
-}
-
-.dark .token.deleted {
-  color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.1);
-}
-
-.dark .token.inserted {
-  color: #4ade80;
-  background-color: rgba(74, 222, 128, 0.1);
 }

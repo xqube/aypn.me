@@ -7,12 +7,24 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                bg: theme.colors.bg,
-                'bg-alt': theme.colors.bgAlt,
-                text: theme.colors.text,
-                'text-muted': theme.colors.textMuted,
-                accent: theme.colors.accent,
-                'accent-dim': theme.colors.accentDim,
+                // Semantic surface tokens (auto-switch via CSS vars)
+                surface: 'var(--color-bg)',
+                'surface-alt': 'var(--color-bg-alt)',
+
+                // Text tokens
+                content: 'var(--color-text)',
+                heading: 'var(--color-text-heading)',
+                muted: 'var(--color-text-muted)',
+                faint: 'var(--color-text-faint)',
+
+                // Accent tokens
+                accent: 'var(--color-accent)',
+                'accent-hover': 'var(--color-accent-hover)',
+                'accent-soft': 'var(--color-accent-soft)',
+
+                // Border tokens
+                line: 'var(--color-border)',
+                'line-subtle': 'var(--color-border-subtle)',
             },
             fontFamily: {
                 mono: theme.fonts.mono,

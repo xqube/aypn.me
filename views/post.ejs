@@ -5,7 +5,7 @@
   <%- include('partials/head', { title, description, url, siteUrl }) %>
 </head>
 
-<body class="bg-gray-50 dark:bg-bg text-gray-700 dark:text-text min-h-screen flex flex-col">
+<body class="bg-surface text-content min-h-screen flex flex-col">
   <%- include('partials/header') %>
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -16,7 +16,7 @@
           <aside class="hidden lg:block">
             <nav class="lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto"
               aria-label="Table of contents">
-              <h2 class="font-mono text-xs text-gray-500 dark:text-text-muted uppercase tracking-widest mb-4">On this
+              <h2 class="font-mono text-xs text-muted uppercase tracking-widest mb-4">On this
                 page</h2>
               <% var tree=[]; var currentH2=null; toc.forEach(function(item) { if (item.depth===2) { currentH2={ id:
                 item.id, text: item.text, children: [] }; tree.push(currentH2); } else if (item.depth===3) { if
@@ -92,32 +92,30 @@
                   <!-- Post content (center column) -->
                   <div class="min-w-0">
                     <a href="<%= (typeof fromPage !== 'undefined' && fromPage) ? '/blog?page=' + fromPage : '/blog' %>"
-                      class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-neutral-400 hover:text-green-600 dark:hover:text-accent border border-gray-200 dark:border-neutral-700 hover:border-green-300 dark:hover:border-accent/40 rounded-full px-3.5 py-1.5 font-mono mb-8 transition-all duration-150">
+                      class="inline-flex items-center gap-2 text-sm text-muted hover:text-accent border border-line hover:border-accent/40 rounded-full px-3.5 py-1.5 font-mono mb-8 transition-all duration-150">
                       <span class="text-base leading-none">&larr;</span> posts
                     </a>
                     <header class="mb-8">
                       <div class="flex items-baseline gap-3 flex-wrap mb-3">
-                        <time datetime="<%= frontmatter.date %>"
-                          class="text-xs text-gray-500 dark:text-text-muted font-mono">
+                        <time datetime="<%= frontmatter.date %>" class="text-xs text-muted font-mono">
                           <%= new Date(frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' , month: 'long' ,
                             day: 'numeric' }) %>
                         </time>
                         <% if (frontmatter.tags && frontmatter.tags.length> 0) { %>
                           <div class="flex gap-2">
                             <% frontmatter.tags.forEach(function(tag) { %>
-                              <span class="text-xs font-mono text-green-600/60 dark:text-accent/60">
+                              <span class="text-xs font-mono text-accent/60">
                                 <%= tag %>
                               </span>
                               <% }); %>
                           </div>
                           <% } %>
                       </div>
-                      <h1
-                        class="font-mono text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-neutral-100 tracking-tight leading-snug">
+                      <h1 class="font-mono text-2xl sm:text-3xl font-semibold text-heading tracking-tight leading-snug">
                         <%= frontmatter.title %>
                       </h1>
                       <% if (frontmatter.description) { %>
-                        <p class="text-gray-500 dark:text-text-muted mt-3 leading-relaxed">
+                        <p class="text-muted mt-3 leading-relaxed">
                           <%= frontmatter.description %>
                         </p>
                         <% } %>
@@ -127,9 +125,9 @@
                       <%- html %>
                     </div>
 
-                    <footer class="mt-12 pt-6 border-t border-gray-200 dark:border-neutral-800">
+                    <footer class="mt-12 pt-6 border-t border-line">
                       <a href="<%= (typeof fromPage !== 'undefined' && fromPage) ? '/blog?page=' + fromPage : '/blog' %>"
-                        class="text-sm text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim font-mono transition-colors duration-150">
+                        class="text-sm text-accent hover:text-accent-hover font-mono transition-colors duration-150">
                         &larr; all posts
                       </a>
                     </footer>
@@ -146,7 +144,7 @@
 
       <!-- Mobile: Latest & Trending below article -->
       <% if ((latestPosts && latestPosts.length> 0) || (trendingPosts && trendingPosts.length > 0)) { %>
-        <div class="lg:hidden mt-10 pt-8 border-t border-gray-200 dark:border-neutral-800">
+        <div class="lg:hidden mt-10 pt-8 border-t border-line">
           <div class="grid grid-cols-2 gap-8">
             <%- include('partials/sidebar', { latestPosts, trendingPosts }) %>
           </div>
@@ -201,9 +199,8 @@
           // Remove active styles from all links
           const removeActive = () => {
             tocLinks.forEach(link => {
-              link.classList.remove('text-green-600', 'dark:text-accent', 'font-medium');
-              // If we previously added !important via script manually (like !text-green-600), we must cleanly remove them or the Tailwind base classes
-              link.className = link.className.replace(/!?text-green-600/g, '').replace(/dark:!?text-accent/g, '').replace(/font-medium/g, '').trim();
+              link.classList.remove('text-accent', 'font-medium');
+              link.className = link.className.replace(/!?text-accent/g, '').replace(/font-medium/g, '').trim();
             });
           };
 
@@ -212,8 +209,7 @@
             removeActive();
             tocLinks.forEach(link => {
               if (link.getAttribute('href') === '#' + id) {
-                // Append tailwind classes manually
-                link.className += ' text-green-600 dark:text-accent font-medium';
+                link.className += ' text-accent font-medium';
               }
             });
           };

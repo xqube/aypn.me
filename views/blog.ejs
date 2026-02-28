@@ -5,7 +5,7 @@
   <%- include('partials/head', { title, description, url, siteUrl }) %>
 </head>
 
-<body class="bg-gray-50 dark:bg-bg text-gray-700 dark:text-text min-h-screen flex flex-col">
+<body class="bg-surface text-content min-h-screen flex flex-col">
   <%- include('partials/header') %>
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
@@ -13,15 +13,14 @@
 
         <!-- Main post list -->
         <div>
-          <h1
-            class="font-mono text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-neutral-100 mb-6 tracking-tight">
+          <h1 class="font-mono text-2xl sm:text-3xl font-semibold text-heading mb-6 tracking-tight">
             Posts
           </h1>
 
           <!-- Search -->
           <div class="mb-8">
             <input id="search-input" type="text" placeholder="search posts…" autocomplete="off"
-              class="w-full max-w-sm bg-transparent border border-gray-200 dark:border-neutral-800 rounded px-3 py-2 text-sm font-mono text-gray-700 dark:text-neutral-300 placeholder-gray-400 dark:placeholder-neutral-600 focus:outline-none focus:border-green-500 dark:focus:border-accent transition-colors">
+              class="w-full max-w-sm bg-transparent border border-line rounded px-3 py-2 text-sm font-mono text-content placeholder-faint focus:outline-none focus:border-accent transition-colors">
             <ul id="search-results" class="space-y-4 mt-6 hidden"></ul>
           </div>
 
@@ -29,19 +28,18 @@
             <% if (posts && posts.length> 0) { %>
               <ul class="space-y-6">
                 <% posts.forEach(function(post) { %>
-                  <li class="border-b border-gray-200 dark:border-neutral-800 pb-6 last:border-b-0">
+                  <li class="border-b border-line pb-6 last:border-b-0">
                     <a href="/blog/<%= post.frontmatter.slug %><%= (typeof currentPage !== 'undefined' && currentPage > 1) ? '?page=' + currentPage : '' %>"
                       class="group block">
                       <div class="flex items-baseline gap-3 flex-wrap">
-                        <time datetime="<%= post.frontmatter.date %>"
-                          class="text-xs text-gray-500 dark:text-text-muted font-mono shrink-0">
+                        <time datetime="<%= post.frontmatter.date %>" class="text-xs text-muted font-mono shrink-0">
                           <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' ,
                             month: 'short' , day: 'numeric' }) %>
                         </time>
                         <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
                           <div class="flex gap-2">
                             <% post.frontmatter.tags.forEach(function(tag) { %>
-                              <span class="text-xs font-mono text-green-600/60 dark:text-accent/60">
+                              <span class="text-xs font-mono text-accent/60">
                                 <%= tag %>
                               </span>
                               <% }); %>
@@ -49,11 +47,11 @@
                           <% } %>
                       </div>
                       <h2
-                        class="font-mono text-lg text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-150 mt-1.5">
+                        class="font-mono text-lg text-heading group-hover:text-accent transition-colors duration-150 mt-1.5">
                         <%= post.frontmatter.title %>
                       </h2>
                       <% if (post.frontmatter.description) { %>
-                        <p class="text-sm text-gray-500 dark:text-text-muted mt-1.5 leading-relaxed">
+                        <p class="text-sm text-muted mt-1.5 leading-relaxed">
                           <%= post.frontmatter.description %>
                         </p>
                         <% } %>
@@ -62,26 +60,26 @@
                   <% }); %>
               </ul>
               <% } else { %>
-                <p class="text-gray-500 dark:text-text-muted">No posts yet.</p>
+                <p class="text-muted">No posts yet.</p>
                 <% } %>
           </div>
 
           <!-- Pagination Controls -->
           <% if (totalPages> 1) { %>
-            <div class="mt-12 flex items-center justify-between border-t border-gray-200 dark:border-neutral-800 pt-6">
+            <div class="mt-12 flex items-center justify-between border-t border-line pt-6">
               <div class="flex flex-1">
                 <% if (currentPage> 1) { %>
                   <a href="/blog?page=<%= currentPage - 1 %>"
-                    class="font-mono text-sm text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim transition-colors duration-200 flex items-center gap-2">
+                    class="font-mono text-sm text-accent hover:text-accent-hover transition-colors duration-200 flex items-center gap-2">
                     <span>&larr;</span> Newer Posts
                   </a>
                   <% } %>
               </div>
               <div class="hidden sm:block">
-                <p class="font-mono text-xs text-gray-500 dark:text-neutral-500">
-                  Page <span class="font-medium text-gray-900 dark:text-neutral-100">
+                <p class="font-mono text-xs text-muted">
+                  Page <span class="font-medium text-heading">
                     <%= currentPage %>
-                  </span> of <span class="font-medium text-gray-900 dark:text-neutral-100">
+                  </span> of <span class="font-medium text-heading">
                     <%= totalPages %>
                   </span>
                 </p>
@@ -89,7 +87,7 @@
               <div class="flex flex-1 justify-end">
                 <% if (currentPage < totalPages) { %>
                   <a href="/blog?page=<%= currentPage + 1 %>"
-                    class="font-mono text-sm text-green-600 dark:text-accent hover:text-green-700 dark:hover:text-accent-dim transition-colors duration-200 flex items-center gap-2">
+                    class="font-mono text-sm text-accent hover:text-accent-hover transition-colors duration-200 flex items-center gap-2">
                     Older Posts <span>&rarr;</span>
                   </a>
                   <% } %>
@@ -108,7 +106,7 @@
       </div>
 
       <!-- Mobile: Latest & Trending below post list -->
-      <div class="lg:hidden mt-10 pt-8 border-t border-gray-200 dark:border-neutral-800">
+      <div class="lg:hidden mt-10 pt-8 border-t border-line">
         <div class="grid grid-cols-2 gap-8">
           <%- include('partials/sidebar', { latestPosts, trendingPosts }) %>
         </div>
@@ -139,11 +137,11 @@
             });
             postList.style.display = 'none';
             results.classList.remove('hidden');
-            if (!hits.length) { results.innerHTML = '<li class="text-sm text-gray-500 dark:text-text-muted font-mono">no results</li>'; return; }
+            if (!hits.length) { results.innerHTML = '<li class="text-sm text-muted font-mono">no results</li>'; return; }
             results.innerHTML = hits.map(function (p) {
               return '<li><a href="/blog/' + p.slug + '" class="group block">' +
-                '<span class="font-mono text-base text-gray-900 dark:text-neutral-100 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-150">' + p.title + '</span>' +
-                (p.description ? '<p class="text-sm text-gray-500 dark:text-text-muted mt-0.5">' + p.description + '</p>' : '') +
+                '<span class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-150">' + p.title + '</span>' +
+                (p.description ? '<p class="text-sm text-muted mt-0.5">' + p.description + '</p>' : '') +
                 '</a></li>';
             }).join('');
           }

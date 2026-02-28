@@ -2,18 +2,18 @@
 
   <% if (latestPosts && latestPosts.length> 0) { %>
     <div>
-      <h3 class="font-mono text-xs text-gray-500 dark:text-text-muted uppercase tracking-widest mb-4">Latest</h3>
+      <h3 class="font-mono text-xs text-muted uppercase tracking-widest mb-4">Latest</h3>
       <ul class="space-y-3">
         <% latestPosts.forEach(function(p) { %>
-          <li class="border-b border-gray-100 dark:border-neutral-800 pb-3 last:border-b-0 last:pb-0">
+          <li class="border-b border-line pb-3 last:border-b-0 last:pb-0">
             <a href="/blog/<%= p.frontmatter.slug %>" class="group block">
               <span
-                class="text-sm font-mono text-gray-700 dark:text-neutral-300 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-150 leading-snug block">
+                class="text-sm font-mono text-content group-hover:text-accent transition-colors duration-150 leading-snug block">
                 <%= p.frontmatter.title %>
               </span>
-              <time datetime="<%= p.frontmatter.date %>"
-                class="text-xs text-gray-400 dark:text-neutral-600 font-mono mt-0.5 block">
-                <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' , day: 'numeric' }) %>
+              <time datetime="<%= p.frontmatter.date %>" class="text-xs text-faint font-mono mt-0.5 block">
+                <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' , day: 'numeric' ,
+                  year: 'numeric' }) %>
               </time>
             </a>
           </li>
@@ -24,27 +24,31 @@
 
       <% if (trendingPosts && trendingPosts.length> 0) { %>
         <div>
-          <h3 class="font-mono text-xs text-gray-500 dark:text-text-muted uppercase tracking-widest mb-4">Trending</h3>
+          <h3 class="font-mono text-xs text-muted uppercase tracking-widest mb-4">Trending</h3>
           <ul class="space-y-3">
             <% trendingPosts.forEach(function(p, i) { %>
               <li class="flex items-start gap-3">
-                <span class="text-lg font-mono text-gray-300 dark:text-neutral-700 leading-none mt-0.5 shrink-0">
+                <span class="text-lg font-mono text-faint leading-none mt-0.5 shrink-0">
                   <%= String(i + 1).padStart(2, '0' ) %>
                 </span>
                 <a href="/blog/<%= p.frontmatter.slug %>" class="group">
                   <span
-                    class="text-sm font-mono text-gray-700 dark:text-neutral-300 group-hover:text-green-600 dark:group-hover:text-accent transition-colors duration-150 leading-snug block">
+                    class="text-sm font-mono text-content group-hover:text-accent transition-colors duration-150 leading-snug block">
                     <%= p.frontmatter.title %>
                   </span>
                   <% if (p.frontmatter.tags && p.frontmatter.tags.length> 0) { %>
                     <div class="flex gap-1.5 mt-1">
                       <% p.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
-                        <span class="text-xs font-mono text-green-600/50 dark:text-accent/50">
+                        <span class="text-xs font-mono text-accent/50">
                           <%= tag %>
                         </span>
                         <% }); %>
                     </div>
                     <% } %>
+                      <time datetime="<%= p.frontmatter.date %>" class="text-xs text-faint font-mono mt-0.5 block">
+                        <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' , day: 'numeric' ,
+                          year: 'numeric' }) %>
+                      </time>
                 </a>
               </li>
               <% }); %>
