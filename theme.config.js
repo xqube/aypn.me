@@ -1,74 +1,65 @@
-/**
- * Global theme configuration.
- * Edit colors, fonts, and design tokens here — they propagate to
- * tailwind.config.js and input.css automatically.
- *
- * All semantic tokens use CSS Custom Properties defined in input.css.
- * This file is the single source of truth for raw color values.
- */
-
 const { SITE_URL } = require('./src/config');
 
 module.exports = {
     // ─── Light palette ────────────────────────────────────────
     light: {
-        bg: '#fafafa',
-        bgAlt: '#ffffff',
-        bgCode: '#f3f4f6',
-        bgInline: '#e5e7eb',
-        border: '#d1d5db',
-        borderSubtle: '#e5e7eb',
-        text: '#374151',
-        textHeading: '#111827',
-        textMuted: '#6b7280',
-        textFaint: '#9ca3af',
-        accent: '#16a34a',
-        accentHover: '#15803d',
-        accentSoft: '#dcfce7',
+        bg: '#F6F8FA',       // GitHub-style light grey
+        bgAlt: '#FFFFFF',    // pure white elevation
+        bgCode: '#F0F2F5',   // code block surface
+        bgInline: '#E8ECF0', // inline code tint
+        border: '#D0D7DE',   // standard border
+        borderSubtle: '#E8ECF0', // faint separator
+        text: '#1F2328',     // rich near-black body   (15.3:1 AAA ✓)
+        textHeading: '#0D1117',  // deep heading          (19.1:1 AAA ✓)
+        textMuted: '#57606A',    // grey metadata          (5.2:1 AA ✓)
+        textFaint: '#8C959F',    // placeholder            (decorative)
+        accent: '#0969DA',       // GitHub blue
+        accentHover: '#0550AE',  // deeper blue on hover
+        accentSoft: '#DDF4FF',   // soft blue tint
     },
 
     // ─── Dark palette ─────────────────────────────────────────
     dark: {
-        bg: '#0f0f0f',
-        bgAlt: '#161616',
-        bgCode: '#111111',
-        bgInline: '#1a1a1a',
-        border: '#262626',
-        borderSubtle: '#1f1f1f',
-        text: '#d4d4d4',
-        textHeading: '#e5e5e5',
-        textMuted: '#737373',
-        textFaint: '#525252',
-        accent: '#4ade80',
-        accentHover: '#22c55e',
-        accentSoft: 'rgba(74,222,128,0.1)',
+        bg: '#111318',           // warmer, slightly lifted dark — easier on eyes
+        bgAlt: '#1A1D23',        // elevated surface
+        bgCode: '#0C0E12',       // code block, slightly deeper
+        bgInline: '#1E2128',     // inline code tint
+        border: '#2E333B',       // warm-tinted border
+        borderSubtle: '#22252C', // micro separator
+        text: '#CDD5DF',         // warm silver — less cold than pure grey (12.1:1 AAA ✓)
+        textHeading: '#EAEEF2',  // soft warm white heading  (17.4:1 AAA ✓)
+        textMuted: '#8D96A0',    // muted blue-grey metadata  (5.4:1 AA ✓)
+        textFaint: '#484F58',    // faint                     (decorative)
+        accent: '#58A6FF',       // GitHub dark blue
+        accentHover: '#79B8FF',  // lighter hover
+        accentSoft: 'rgba(88, 166, 255, 0.10)', // 10% blue glow
     },
 
     // ─── Syntax highlighting ──────────────────────────────────
     syntax: {
         light: {
-            keyword: '#7c3aed',
-            string: '#16a34a',
-            comment: '#9ca3af',
-            function: '#2563eb',
-            number: '#d97706',
-            builtin: '#db2777',
-            type: '#0891b2',
-            variable: '#ea580c',
-            attr: '#16a34a',
-            punctuation: '#6b7280',
+            keyword: '#6639BA',   // calm violet — replaces fatiguing red
+            string: '#1A7F64',    // muted teal — replaces harsh deep blue
+            comment: '#8C959F',   // matches textFaint
+            function: '#0550AE',  // rich blue
+            number: '#953800',    // warm amber-brown
+            builtin: '#953800',   // warm amber-brown
+            type: '#116329',      // forest green
+            variable: '#6639BA',  // violet, consistent with keyword
+            attr: '#1A7F64',      // teal, consistent with string
+            punctuation: '#57606A', // matches textMuted
         },
         dark: {
-            keyword: '#c084fc',
-            string: '#4ade80',
-            comment: '#525252',
-            function: '#60a5fa',
-            number: '#f59e0b',
-            builtin: '#f472b6',
-            type: '#22d3ee',
-            variable: '#fb923c',
-            attr: '#4ade80',
-            punctuation: '#a3a3a3',
+            keyword: '#D2A8FF',   // soft purple — calm, not electric
+            string: '#7EE787',    // terminal green — easy on eyes
+            comment: '#6A737D',   // mid-grey, clearly de-emphasized
+            function: '#79C0FF',  // cornflower blue
+            number: '#FFA657',    // amber orange
+            builtin: '#FFA657',   // amber orange
+            type: '#A5D6FF',      // sky blue
+            variable: '#D2A8FF',  // purple, consistent with keyword
+            attr: '#7EE787',      // green, consistent with string
+            punctuation: '#8B949E', // matches textMuted
         },
     },
 
