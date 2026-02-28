@@ -30,31 +30,41 @@
                 <% posts.forEach(function(post) { %>
                   <li class="border-b border-line pb-6 last:border-b-0">
                     <a href="/blog/<%= post.frontmatter.slug %><%= (typeof currentPage !== 'undefined' && currentPage > 1) ? '?page=' + currentPage : '' %>"
-                      class="group block">
-                      <div class="flex items-baseline gap-3 flex-wrap">
-                        <time datetime="<%= post.frontmatter.date %>" class="text-xs text-muted font-mono shrink-0">
-                          <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' ,
-                            month: 'short' , day: 'numeric' }) %>
-                        </time>
-                        <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
-                          <div class="flex gap-2">
-                            <% post.frontmatter.tags.forEach(function(tag) { %>
-                              <span class="text-xs font-mono text-accent/60">
-                                <%= tag %>
-                              </span>
-                              <% }); %>
-                          </div>
-                          <% } %>
-                      </div>
-                      <h2
-                        class="font-mono text-lg text-heading group-hover:text-accent transition-colors duration-150 mt-1.5">
-                        <%= post.frontmatter.title %>
-                      </h2>
-                      <% if (post.frontmatter.description) { %>
-                        <p class="text-sm text-muted mt-1.5 leading-relaxed">
-                          <%= post.frontmatter.description %>
-                        </p>
+                      class="group flex items-start gap-4">
+                      <% if (post.frontmatter.coverImage) { %>
+                        <div class="shrink-0 w-20 h-20 rounded-md overflow-hidden bg-surface-alt border border-line">
+                          <img src="<%= post.frontmatter.coverImage %>" alt="<%= post.frontmatter.title %>"
+                            loading="lazy" decoding="async"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                        </div>
                         <% } %>
+                          <div class="min-w-0 flex-1">
+                            <div class="flex items-baseline gap-3 flex-wrap">
+                              <time datetime="<%= post.frontmatter.date %>"
+                                class="text-xs text-muted font-mono shrink-0">
+                                <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' ,
+                                  month: 'short' , day: 'numeric' }) %>
+                              </time>
+                              <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
+                                <div class="flex gap-2">
+                                  <% post.frontmatter.tags.forEach(function(tag) { %>
+                                    <span class="text-xs font-mono text-accent/60">
+                                      <%= tag %>
+                                    </span>
+                                    <% }); %>
+                                </div>
+                                <% } %>
+                            </div>
+                            <h2
+                              class="font-mono text-lg text-heading group-hover:text-accent transition-colors duration-150 mt-1.5">
+                              <%= post.frontmatter.title %>
+                            </h2>
+                            <% if (post.frontmatter.description) { %>
+                              <p class="text-sm text-muted mt-1.5 leading-relaxed">
+                                <%= post.frontmatter.description %>
+                              </p>
+                              <% } %>
+                          </div>
                     </a>
                   </li>
                   <% }); %>

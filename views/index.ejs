@@ -374,31 +374,42 @@
                       <ul class="space-y-6">
                         <% latestPosts.forEach(function(post) { %>
                           <li>
-                            <a href="/blog/<%= post.frontmatter.slug %>" class="group block">
-                              <span
-                                class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-200 leading-snug block">
-                                <%= post.frontmatter.title %>
-                              </span>
-                              <div class="flex items-center gap-3 mt-1.5">
-                                <time datetime="<%= post.frontmatter.date %>" class="text-xs text-faint font-mono">
-                                  <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric' ,
-                                    month: 'short' , day: 'numeric' }) %>
-                                </time>
-                                <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
-                                  <div class="flex gap-1.5">
-                                    <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
-                                      <span class="text-xs font-mono text-accent/50">
-                                        <%= tag %>
-                                      </span>
-                                      <% }); %>
-                                  </div>
-                                  <% } %>
-                              </div>
-                              <% if (post.frontmatter.description) { %>
-                                <p class="text-sm text-muted mt-2 leading-relaxed">
-                                  <%= post.frontmatter.description %>
-                                </p>
+                            <a href="/blog/<%= post.frontmatter.slug %>" class="group flex items-start gap-4">
+                              <% if (post.frontmatter.coverImage) { %>
+                                <div
+                                  class="shrink-0 w-14 h-14 rounded-md overflow-hidden bg-surface-alt border border-line">
+                                  <img src="<%= post.frontmatter.coverImage %>" alt="<%= post.frontmatter.title %>"
+                                    loading="lazy" decoding="async"
+                                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                                </div>
                                 <% } %>
+                                  <div class="min-w-0 flex-1">
+                                    <span
+                                      class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-200 leading-snug block">
+                                      <%= post.frontmatter.title %>
+                                    </span>
+                                    <div class="flex items-center gap-3 mt-1.5">
+                                      <time datetime="<%= post.frontmatter.date %>"
+                                        class="text-xs text-faint font-mono">
+                                        <%= new Date(post.frontmatter.date).toLocaleDateString('en-US', {
+                                          year: 'numeric' , month: 'short' , day: 'numeric' }) %>
+                                      </time>
+                                      <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
+                                        <div class="flex gap-1.5">
+                                          <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
+                                            <span class="text-xs font-mono text-accent/50">
+                                              <%= tag %>
+                                            </span>
+                                            <% }); %>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                    <% if (post.frontmatter.description) { %>
+                                      <p class="text-sm text-muted mt-2 leading-relaxed">
+                                        <%= post.frontmatter.description %>
+                                      </p>
+                                      <% } %>
+                                  </div>
                             </a>
                           </li>
                           <% }); %>
@@ -419,21 +430,28 @@
                                 <span class="text-2xl font-mono text-line leading-none mt-0.5 shrink-0 select-none">
                                   <%= String(i + 1).padStart(2, '0' ) %>
                                 </span>
-                                <a href="/blog/<%= post.frontmatter.slug %>" class="group">
-                                  <span
-                                    class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-200 leading-snug block">
-                                    <%= post.frontmatter.title %>
-                                  </span>
-                                  <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
-                                    <div class="flex gap-1.5 mt-1.5">
-                                      <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
-                                        <span class="text-xs font-mono text-accent/50">
-                                          <%= tag %>
-                                        </span>
-                                        <% }); %>
-                                    </div>
-                                    <% } %>
-                                </a>
+                                <% if (post.frontmatter.coverImage) { %>
+                                  <div
+                                    class="shrink-0 w-14 h-14 rounded-md overflow-hidden bg-surface-alt border border-line">
+                                    <img src="<%= post.frontmatter.coverImage %>" alt="<%= post.frontmatter.title %>"
+                                      loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                  </div>
+                                  <% } %>
+                                    <a href="/blog/<%= post.frontmatter.slug %>" class="group min-w-0 flex-1">
+                                      <span
+                                        class="font-mono text-base text-heading group-hover:text-accent transition-colors duration-200 leading-snug block">
+                                        <%= post.frontmatter.title %>
+                                      </span>
+                                      <% if (post.frontmatter.tags && post.frontmatter.tags.length> 0) { %>
+                                        <div class="flex gap-1.5 mt-1.5">
+                                          <% post.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
+                                            <span class="text-xs font-mono text-accent/50">
+                                              <%= tag %>
+                                            </span>
+                                            <% }); %>
+                                        </div>
+                                        <% } %>
+                                    </a>
                               </li>
                               <% }); %>
                           </ul>

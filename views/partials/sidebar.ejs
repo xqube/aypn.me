@@ -6,15 +6,23 @@
       <ul class="space-y-3">
         <% latestPosts.forEach(function(p) { %>
           <li class="border-b border-line pb-3 last:border-b-0 last:pb-0">
-            <a href="/blog/<%= p.frontmatter.slug %>" class="group block">
-              <span
-                class="text-sm font-mono text-content group-hover:text-accent transition-colors duration-150 leading-snug block">
-                <%= p.frontmatter.title %>
-              </span>
-              <time datetime="<%= p.frontmatter.date %>" class="text-xs text-faint font-mono mt-0.5 block">
-                <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' , day: 'numeric' ,
-                  year: 'numeric' }) %>
-              </time>
+            <a href="/blog/<%= p.frontmatter.slug %>" class="group flex items-start gap-3">
+              <% if (p.frontmatter.coverImage) { %>
+                <div class="shrink-0 w-12 h-12 rounded overflow-hidden bg-surface-alt border border-line">
+                  <img src="<%= p.frontmatter.coverImage %>" alt="<%= p.frontmatter.title %>" loading="lazy"
+                    decoding="async" class="w-full h-full object-cover">
+                </div>
+                <% } %>
+                  <div class="min-w-0 flex-1">
+                    <span
+                      class="text-sm font-mono text-content group-hover:text-accent transition-colors duration-150 leading-snug block">
+                      <%= p.frontmatter.title %>
+                    </span>
+                    <time datetime="<%= p.frontmatter.date %>" class="text-xs text-faint font-mono mt-0.5 block">
+                      <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' , day: 'numeric' ,
+                        year: 'numeric' }) %>
+                    </time>
+                  </div>
             </a>
           </li>
           <% }); %>
@@ -31,25 +39,31 @@
                 <span class="text-lg font-mono text-faint leading-none mt-0.5 shrink-0">
                   <%= String(i + 1).padStart(2, '0' ) %>
                 </span>
-                <a href="/blog/<%= p.frontmatter.slug %>" class="group">
-                  <span
-                    class="text-sm font-mono text-content group-hover:text-accent transition-colors duration-150 leading-snug block">
-                    <%= p.frontmatter.title %>
-                  </span>
-                  <% if (p.frontmatter.tags && p.frontmatter.tags.length> 0) { %>
-                    <div class="flex gap-1.5 mt-1">
-                      <% p.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
-                        <span class="text-xs font-mono text-accent/50">
-                          <%= tag %>
-                        </span>
-                        <% }); %>
-                    </div>
-                    <% } %>
-                      <time datetime="<%= p.frontmatter.date %>" class="text-xs text-faint font-mono mt-0.5 block">
-                        <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' , day: 'numeric' ,
-                          year: 'numeric' }) %>
-                      </time>
-                </a>
+                <% if (p.frontmatter.coverImage) { %>
+                  <div class="shrink-0 w-12 h-12 rounded overflow-hidden bg-surface-alt border border-line">
+                    <img src="<%= p.frontmatter.coverImage %>" alt="<%= p.frontmatter.title %>" loading="lazy"
+                      decoding="async" class="w-full h-full object-cover">
+                  </div>
+                  <% } %>
+                    <a href="/blog/<%= p.frontmatter.slug %>" class="group min-w-0 flex-1">
+                      <span
+                        class="text-sm font-mono text-content group-hover:text-accent transition-colors duration-150 leading-snug block">
+                        <%= p.frontmatter.title %>
+                      </span>
+                      <% if (p.frontmatter.tags && p.frontmatter.tags.length> 0) { %>
+                        <div class="flex gap-1.5 mt-1">
+                          <% p.frontmatter.tags.slice(0, 2).forEach(function(tag) { %>
+                            <span class="text-xs font-mono text-accent/50">
+                              <%= tag %>
+                            </span>
+                            <% }); %>
+                        </div>
+                        <% } %>
+                          <time datetime="<%= p.frontmatter.date %>" class="text-xs text-faint font-mono mt-0.5 block">
+                            <%= new Date(p.frontmatter.date).toLocaleDateString('en-US', { month: 'short' ,
+                              day: 'numeric' , year: 'numeric' }) %>
+                          </time>
+                    </a>
               </li>
               <% }); %>
           </ul>

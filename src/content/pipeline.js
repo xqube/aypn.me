@@ -144,6 +144,10 @@ async function compileFile(filePath) {
             slug,
             tags: frontmatter.tags || [],
             description: frontmatter.description || '',
+            coverImage: frontmatter.coverImage
+                && fs.existsSync(path.join(path.dirname(filePath), frontmatter.coverImage.replace(/^\.\//, '')))
+                ? `/blog/${slug}/${frontmatter.coverImage.replace(/^\.\//, '')}`
+                : null,
         },
         dirPath: path.dirname(filePath),
     };
