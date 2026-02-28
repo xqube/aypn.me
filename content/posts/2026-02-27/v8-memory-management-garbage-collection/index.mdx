@@ -345,14 +345,46 @@ An unhealthy system shows a "rising tide" sawtooth. The baseline after every Maj
 
 **Junior Level:**
 1. What is the difference between how primitive types (strings, numbers) and objects are handled in JavaScript memory?
+
+   Primitives (`number`, `boolean`, `null`, `undefined`, `symbol`, `bigint`) are stored **directly on the stack** or inline within the object that contains them. They are fixed-size, immutable values — when you assign `let b = a`, V8 copies the value itself. Strings are a special case: short strings may be internalized (deduplicated), but conceptually they behave like primitives.
+
+   Objects (including arrays, functions, `Date`, `RegExp`, etc.) are stored **on the V8 heap**. The variable holds a **pointer** (reference) to the heap location, not the object itself. When you assign `let b = a`, both `a` and `b` point to the same heap object — no copy is made. This is why mutating `b.name` also changes `a.name`. The Garbage Collector only manages heap-allocated objects; stack values are freed automatically when the function returns.
+
 2. If you assign a variable to `null`, what exactly happens in the V8 engine? Does it immediately free the memory?
+
+   No. Setting `obj = null` does **not** free memory. It overwrites the variable's pointer, removing one reference to the heap object. The object remains in memory. V8's Garbage Collector runs on its **own schedule** — during a future GC cycle, the Mark phase will walk all live references starting from roots (global scope, stack, closures). If no root can reach the object anymore, it is **marked as unreachable** and the Sweep phase reclaims its memory. This could happen milliseconds or seconds later — you have zero control over when. The key takeaway: setting to `null` makes the object *eligible* for collection, it does not *trigger* collection.
 
 **Mid Level:**
 1. Describe the difference between the Young Generation (New Space) and Old Generation (Old Space) in V8. Why does the engine separate them?
+
+   V8 divides its heap into two generational spaces based on the **Generational Hypothesis** — the observation that most objects die young.
+
+   **Young Generation (New Space):** Small (~1–8 MB), divided into two semi-spaces (`from-space` and `to-space`). All new allocations land here. Collected by the **Scavenger** (a parallel, stop-the-world copying collector). During a Scavenge, live objects in `from-space` are copied to `to-space`, and `from-space` is wiped entirely. Objects that survive two Scavenge cycles are **promoted** to Old Space. Scavenges are fast (1–2ms) because most objects are already dead — only live ones are touched.
+
+   **Old Generation (Old Space):** Much larger (up to GBs). Houses objects that survived promotion. Collected by the **Mark-Sweep-Compact** collector, which runs concurrently with the main thread for marking, but requires short stop-the-world pauses for sweeping and compaction. Major GCs are slower (10–100ms+) because Old Space is large.
+
+   The separation exists for **efficiency**: short-lived objects (95%+ of all allocations) are collected cheaply in New Space without ever touching the expensive Major GC. Only the small fraction that lives long enough gets promoted. This means V8 spends most of its GC time doing fast, tiny Scavenges instead of slow, full-heap sweeps.
+
 2. What is a memory leak in JavaScript, and what are three common ways a developer might accidentally cause one in an Express server?
+
+   A memory leak occurs when objects that are no longer needed remain reachable from a GC root, preventing the Garbage Collector from reclaiming them. The heap grows monotonically until the process crashes with an OOM error.
+
+   **Leak 1 — Module-scoped caches without bounds:** Storing per-request data in a `Map` or object at module scope (e.g., `const cache = {}; cache[req.id] = data;`) without eviction. Every request adds an entry, none are removed. The Map grows forever.
+
+   **Leak 2 — Unremoved event listeners:** Attaching listeners to long-lived objects (e.g., `process.on('uncaughtException', handler)` or `socket.on('data', handler)`) inside request handlers without removing them. Each request adds a new closure — the closures and everything they capture stay referenced indefinitely.
+
+   **Leak 3 — Closures capturing large scopes:** A closure (e.g., a `setTimeout` callback or a Promise `.then()`) accidentally captures the entire enclosing scope, including large objects like parsed request bodies. If the closure lives longer than expected (e.g., a pending `setTimeout` that never fires or an unresolved Promise), the captured variables are never freed.
 
 **Senior Level:**
 1. Explain how you would investigate and definitively prove the root cause of an OOM (Out of Memory) crash on a live Node.js production server without causing extended downtime.
+
+   **Step 1 — Reproduce with heap snapshots:** Add `--max-old-space-size=256` to constrain memory and accelerate the crash. Use `--heapsnapshot-signal=SIGUSR2` so you can trigger a heap snapshot on demand (`kill -USR2 <pid>`) without restarting. Take snapshots at T+0, T+5min, T+15min.
+
+   **Step 2 — Compare snapshots in Chrome DevTools:** Load all three snapshots into DevTools → Memory → Comparison view. Sort by **"# Delta"** (objects added between snapshots). The object type with the largest positive delta is your prime suspect. The "Retainers" panel shows the exact reference chain keeping it alive — follow it back to the root.
+
+   **Step 3 — Prove it:** Once you identify the suspect (e.g., a growing `Map` in a middleware module), inspect the retainer tree to find the exact line of code that holds the reference. Verify by checking the "Shallow Size" × "Delta count" — this should match the total heap growth between snapshots. If `10,000 new ClosureContext objects × 2KB each = 20MB growth`, and your heap grew ~20MB between snapshots, you've definitively proven the root cause.
+
+   **Step 4 — Zero-downtime in production:** Run the instrumented instance behind a load balancer alongside healthy instances. Route a fraction of traffic to it. When you have your snapshots, remove it. No downtime, no user impact.
 2. How do `WeakMap`, `WeakSet`, and `WeakRef` interact with the Garbage Collector? In what specific architectural scenarios would you use them over a standard `Map`?
 
    - **`WeakMap` / `WeakSet`:** Keys must be objects. The GC is free to collect a key object at any point; when it does, the associated entry is automatically removed. Use these when you need to associate metadata with an object (e.g., a DOM node or request context) without preventing it from being collected — classic examples are per-request caches and memoization caches keyed on live objects.
