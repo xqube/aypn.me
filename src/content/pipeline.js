@@ -77,6 +77,64 @@ function rehypeExternalLinks() {
 }
 
 /**
+ * Custom rehype plugin: transform GitHub-style callout blocks.
+ * Converts > [!NOTE], > [!TIP], > [!IMPORTANT], > [!WARNING], > [!CAUTION]
+ * into styled callout elements with appropriate CSS classes.
+ */
+const CALLOUT_TYPES = ['NOTE', 'TIP', 'IMPORTANT', 'WARNING', 'CAUTION'];
+const CALLOUT_REGEX = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/i;
+
+function rehypeCallouts() {
+    return function (tree) {
+        visit(tree, 'element', (node) => {
+            if (node.tagName !== 'blockquote') return;
+
+            // Find the first <p> child
+            const firstP = node.children.find(
+                (c) => c.type === 'element' && c.tagName === 'p'
+            );
+            if (!firstP || !firstP.children || !firstP.children.length) return;
+
+            // Check if first text node starts with [!TYPE]
+            const firstChild = firstP.children[0];
+            if (!firstChild || firstChild.type !== 'text') return;
+
+            const match = firstChild.value.match(CALLOUT_REGEX);
+            if (!match) return;
+
+            const calloutType = match[1].toUpperCase();
+            const typeLower = calloutType.toLowerCase();
+
+            // Remove the [!TYPE] text from the paragraph
+            firstChild.value = firstChild.value.replace(CALLOUT_REGEX, '');
+
+            // If the text node is now empty, remove it
+            if (!firstChild.value.trim()) {
+                firstP.children.shift();
+            }
+
+            // Add callout class to blockquote
+            node.properties = node.properties || {};
+            const cls = node.properties.className || [];
+            cls.push(`callout-${typeLower}`);
+            node.properties.className = cls;
+
+            // Inject title element at the top
+            const titleNode = {
+                type: 'element',
+                tagName: 'p',
+                properties: { className: ['callout-title'] },
+                children: [{ type: 'text', value: calloutType }],
+            };
+
+            // Insert title before the first paragraph
+            const pIdx = node.children.indexOf(firstP);
+            node.children.splice(pIdx, 0, titleNode);
+        });
+    };
+}
+
+/**
  * Compile a single .mdx file to HTML with frontmatter extraction.
  * Uses unified + remark + rehype pipeline (ESM modules loaded dynamically).
  */
@@ -146,6 +204,7 @@ async function compileFile(filePath) {
         .use(remarkGfm)
         .use(remarkRehype, { allowDangerousHtml: true })
         .use(rehypeRaw)
+        .use(rehypeCallouts)
         .use(rehypeRewriteImages)
         .use(rehypeExtractToc, { toc })
         .use(rehypeExternalLinks)
