@@ -125,6 +125,36 @@
                       <%- html %>
                     </div>
 
+                    <!-- Reaction Bar -->
+                    <div class="reaction-bar" id="reaction-bar" data-slug="<%= frontmatter.slug %>">
+                      <div class="reaction-meta">
+                        <span class="reaction-views" id="view-count">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span>
+                            <%= typeof viewCount !=='undefined' ? viewCount : 0 %> views
+                          </span>
+                        </span>
+                      </div>
+                      <div class="reaction-buttons">
+                        <button class="reaction-btn" data-type="👍" aria-label="Like">
+                          <span class="reaction-emoji">👍</span>
+                          <span class="reaction-count" id="count-👍">0</span>
+                        </button>
+                        <button class="reaction-btn" data-type="🔥" aria-label="Fire">
+                          <span class="reaction-emoji">🔥</span>
+                          <span class="reaction-count" id="count-🔥">0</span>
+                        </button>
+                        <button class="reaction-btn" data-type="💡" aria-label="Insightful">
+                          <span class="reaction-emoji">💡</span>
+                          <span class="reaction-count" id="count-💡">0</span>
+                        </button>
+                      </div>
+                    </div>
+
                     <footer class="mt-12 pt-6 border-t border-line">
                       <a href="<%= (typeof fromPage !== 'undefined' && fromPage) ? '/blog?page=' + fromPage : '/blog' %>"
                         class="text-sm text-accent hover:text-accent-hover font-mono transition-colors duration-150">
@@ -241,6 +271,70 @@
           // Trigger initial state
           if (window.scrollY === 0) addActive(headings[0].id);
 
+        })();
+      </script>
+
+      <!-- Reaction Bar Logic -->
+      <script>
+        (function () {
+          var bar = document.getElementById('reaction-bar');
+          if (!bar) return;
+          var slug = bar.dataset.slug;
+
+          // Load initial reaction counts
+          fetch('/api/reactions/' + slug)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              ['👍', '🔥', '💡'].forEach(function (type) {
+                var el = document.getElementById('count-' + type);
+                if (el && data[type] !== undefined) el.textContent = data[type];
+              });
+            })
+            .catch(function () { /* graceful — counts stay at 0 */ });
+
+          // Handle reaction clicks
+          var buttons = bar.querySelectorAll('.reaction-btn');
+          buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              var type = btn.dataset.type;
+              var key = 'reacted:' + slug + ':' + type;
+
+              // Prevent spam via localStorage (one reaction per type per post)
+              if (localStorage.getItem(key)) {
+                btn.classList.add('reaction-btn--already');
+                setTimeout(function () { btn.classList.remove('reaction-btn--already'); }, 600);
+                return;
+              }
+
+              // Animate
+              btn.classList.add('reaction-btn--active');
+              setTimeout(function () { btn.classList.remove('reaction-btn--active'); }, 400);
+
+              fetch('/api/reactions/' + slug, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: type })
+              })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                  ['👍', '🔥', '💡'].forEach(function (t) {
+                    var el = document.getElementById('count-' + t);
+                    if (el && data[t] !== undefined) el.textContent = data[t];
+                  });
+                  localStorage.setItem(key, '1');
+                  btn.classList.add('reaction-btn--reacted');
+                })
+                .catch(function () { /* silent fail */ });
+            });
+          });
+
+          // Restore reacted state from localStorage
+          ['👍', '🔥', '💡'].forEach(function (type) {
+            if (localStorage.getItem('reacted:' + slug + ':' + type)) {
+              var btn = bar.querySelector('[data-type="' + type + '"]');
+              if (btn) btn.classList.add('reaction-btn--reacted');
+            }
+          });
         })();
       </script>
 </body>

@@ -9,6 +9,7 @@ const morgan = require('morgan');
 const indexRoutes = require('./src/routes/index');
 const blogRoutes = require('./src/routes/blog');
 const feedRoutes = require('./src/routes/feed');
+const apiRoutes = require('./src/routes/api');
 
 const app = express();
 
@@ -98,6 +99,7 @@ if (process.env.NODE_ENV === 'development') {
 // Routes
 app.use('/', indexRoutes);
 app.use('/', feedRoutes);
+app.use('/api', express.json(), apiRoutes);
 app.use('/blog', blogRoutes);
 
 // 404 handler

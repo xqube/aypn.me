@@ -19,6 +19,7 @@
     "gray-matter": "^4.0.3",
     "hast-util-to-string": "^3.0.1",
     "helmet": "^8.1.0",
+    "mongodb": "^7.1.0",
     "morgan": "^1.10.0",
     "rehype-prism-plus": "^2.0.2",
     "rehype-raw": "^7.0.0",

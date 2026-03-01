@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const router = express.Router();
 const { SITE_URL, POSTS_PER_PAGE } = require('../config');
 const { getAllPosts, getPost, getLatestPosts, getTrendingPosts } = require('../content/cache');
+const { trackView, getViewCount } = require('../analytics');
 
 /** Generate a weak ETag from a short string key */
 function etag(key) {
@@ -41,7 +42,7 @@ router.get('/', (req, res) => {
 });
 
 // Single post
-router.get('/:slug', (req, res) => {
+router.get('/:slug', async (req, res) => {
     const post = getPost(req.params.slug);
     const fromPage = parseInt(req.query.page) || null;
 
@@ -59,6 +60,12 @@ router.get('/:slug', (req, res) => {
     res.set('ETag', tag);
     if (req.fresh) return res.sendStatus(304);
 
+    // Fire-and-forget view tracking
+    trackView(req.params.slug, req.ip, req.headers['user-agent']);
+
+    // Fetch view count (non-blocking if DB is down — returns 0)
+    const viewCount = await getViewCount(req.params.slug);
+
     res.render('post', {
         title: `${post.frontmatter.title} — blog.aypn`,
         description: post.frontmatter.description,
@@ -67,6 +74,7 @@ router.get('/:slug', (req, res) => {
         html: post.html,
         toc: post.toc || [],
         frontmatter: post.frontmatter,
+        viewCount,
         latestPosts: getLatestPosts(3, req.params.slug),
         trendingPosts: getTrendingPosts(3, req.params.slug),
         fromPage,

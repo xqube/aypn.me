@@ -9,6 +9,7 @@ module.exports = {
                 NODE_ENV: 'production',
                 PORT: 3001,
                 SITE_URL: 'https://aypn.me',
+                MONGO_URI: 'mongodb://localhost:27017/aypn',
             },
             max_memory_restart: '256M',
             log_date_format: 'YYYY-MM-DD HH:mm:ss Z',

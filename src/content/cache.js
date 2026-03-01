@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { compileFile, ensureModules } = require('./pipeline');
 const { buildSearchIndex } = require('./search');
+const { getTrendingSlugs } = require('../analytics');
 
 const POSTS_DIR = path.join(__dirname, '..', '..', 'content', 'posts');
 const DIST_POSTS_DIR = path.join(__dirname, '..', '..', 'dist', 'posts');
@@ -41,6 +42,7 @@ function rebuildIndexes() {
         return db - da;
     });
 
+    // Fallback trending (by tag count) — overridden by refreshTrending() if MongoDB is up
     trendingPosts = [...sortedPosts].sort(
         (a, b) => (b.frontmatter.tags?.length || 0) - (a.frontmatter.tags?.length || 0)
     );
@@ -52,6 +54,32 @@ function rebuildIndexes() {
         });
     });
 }
+
+/**
+ * Refresh trending posts from MongoDB view analytics.
+ * Runs on init and every 5 minutes. Non-blocking — if MongoDB is
+ * unavailable, the fallback tag-count sort remains in effect.
+ */
+async function refreshTrending() {
+    try {
+        const slugs = await getTrendingSlugs(10);
+        if (slugs.length === 0) return; // No data yet — keep fallback
+
+        const fromDb = slugs
+            .map((s) => cache.get(s))
+            .filter(Boolean);
+
+        // Append posts not in the trending list (for diversity)
+        const trendingSlugsSet = new Set(slugs);
+        const rest = sortedPosts.filter((p) => !trendingSlugsSet.has(p.frontmatter.slug));
+
+        trendingPosts = [...fromDb, ...rest];
+    } catch {
+        // Keep existing fallback trending
+    }
+}
+
+const TRENDING_REFRESH_MS = 5 * 60 * 1000; // 5 minutes
 
 // ── Load from per-post JSON artifacts ────────────────────────
 
@@ -202,6 +230,12 @@ async function initCache(silent = false) {
 
     rebuildIndexes();
     buildSearchIndex(sortedPosts, silent);
+
+    // Initial trending refresh from MongoDB (non-blocking fallback)
+    await refreshTrending();
+
+    // Periodic trending refresh
+    setInterval(() => refreshTrending(), TRENDING_REFRESH_MS);
 
     if (!silent) console.log(`Content cache ready in ${Date.now() - start}ms`);
 

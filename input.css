@@ -217,6 +217,103 @@
   border-color: var(--color-accent) !important;
 }
 
+/* ── Reaction Bar ──────────────────────────────────────────── */
+.reaction-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 2.5rem;
+  padding: 14px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg-alt);
+}
+
+.reaction-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reaction-views {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.reaction-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.reaction-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  background: var(--color-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.reaction-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  transform: translateY(-1px);
+}
+
+.reaction-emoji {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.reaction-count {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  min-width: 12px;
+  text-align: center;
+}
+
+.reaction-btn--reacted {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.reaction-btn--reacted .reaction-count {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.reaction-btn--active {
+  animation: reaction-pop 0.4s ease;
+}
+
+.reaction-btn--already {
+  animation: reaction-shake 0.5s ease;
+}
+
+@keyframes reaction-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes reaction-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
 /*
  * Theme: Dark/Light mode via .dark class on <html>.
  * Colors reference CSS variables defined below.
