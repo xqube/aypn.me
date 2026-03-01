@@ -20,19 +20,19 @@ module.exports = {
 
     // ─── Dark palette ─────────────────────────────────────────
     dark: {
-        bg: '#111318',           // warmer, slightly lifted dark — easier on eyes
-        bgAlt: '#1A1D23',        // elevated surface
-        bgCode: '#0C0E12',       // code block, slightly deeper
-        bgInline: '#1E2128',     // inline code tint
-        border: '#2E333B',       // warm-tinted border
-        borderSubtle: '#22252C', // micro separator
-        text: '#CDD5DF',         // warm silver — less cold than pure grey (12.1:1 AAA ✓)
-        textHeading: '#EAEEF2',  // soft warm white heading  (17.4:1 AAA ✓)
-        textMuted: '#8D96A0',    // muted blue-grey metadata  (5.4:1 AA ✓)
-        textFaint: '#484F58',    // faint                     (decorative)
-        accent: '#58A6FF',       // GitHub dark blue
-        accentHover: '#79B8FF',  // lighter hover
-        accentSoft: 'rgba(88, 166, 255, 0.10)', // 10% blue glow
+        bg: '#16181D',           // neutral charcoal — softer than 111318
+        bgAlt: '#1E2127',        // elevated surface
+        bgCode: '#13151A',       // code slightly deeper but not crushed
+        bgInline: '#22262D',     // inline code neutral tint
+        border: '#30363D',       // balanced neutral border
+        borderSubtle: '#262A30', // micro separator
+        text: '#D1D6DC',         // soft silver (AAA contrast)
+        textHeading: '#F0F3F6',  // gentle near-white
+        textMuted: '#9AA3AD',    // calm metadata grey (AA ✓)
+        textFaint: '#5B636E',    // decorative faint
+        accent: '#5EA8FF',       // softened GitHub-style blue
+        accentHover: '#7DB8FF',
+        accentSoft: 'rgba(94, 168, 255, 0.12)',
     },
 
     // ─── Syntax highlighting ──────────────────────────────────

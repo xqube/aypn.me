@@ -253,19 +253,32 @@
   }
 
   .dark {
-    --color-bg: #111318;
-    --color-bg-alt: #1A1D23;
-    --color-bg-code: #0C0E12;
-    --color-bg-inline: #1E2128;
-    --color-border: #2E333B;
-    --color-border-subtle: #22252C;
-    --color-text: #CDD5DF;
-    --color-text-heading: #EAEEF2;
-    --color-text-muted: #8D96A0;
-    --color-text-faint: #484F58;
-    --color-accent: #58A6FF;
-    --color-accent-hover: #79B8FF;
-    --color-accent-soft: rgba(88, 166, 255, 0.10);
+    --color-bg: #16181D;
+    /* neutral charcoal base */
+    --color-bg-alt: #1E2127;
+    /* elevated surface */
+    --color-bg-code: #13151A;
+    /* deeper but not crushed */
+    --color-bg-inline: #22262D;
+    /* neutral inline tint */
+    --color-border: #30363D;
+    /* balanced divider */
+    --color-border-subtle: #262A30;
+    /* micro separator */
+
+    --color-text: #D1D6DC;
+    /* soft silver body */
+    --color-text-heading: #F0F3F6;
+    /* gentle near-white */
+    --color-text-muted: #9AA3AD;
+    /* calm metadata */
+    --color-text-faint: #5B636E;
+    /* decorative faint */
+
+    --color-accent: #5EA8FF;
+    /* softened blue */
+    --color-accent-hover: #7DB8FF;
+    --color-accent-soft: rgba(94, 168, 255, 0.12);
 
     /* Syntax highlighting */
     --hl-keyword: #D2A8FF;

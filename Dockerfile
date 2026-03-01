@@ -1,11 +1,10 @@
-# Stage 1: Build CSS
+# Stage 1: Build CSS + Content
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
-COPY tailwind.config.js postcss.config.js input.css ./
-COPY views/ ./views/
-RUN npx tailwindcss -i ./input.css -o ./public/css/styles.css --minify
+COPY . .
+RUN npm run build
 
 # Stage 2: Production
 FROM node:20-alpine
@@ -19,7 +18,10 @@ COPY app.js ./
 COPY src/ ./src/
 COPY views/ ./views/
 COPY content/ ./content/
-COPY --from=builder /app/public/css/styles.css ./public/css/styles.css
+COPY scripts/ ./scripts/
+COPY theme.config.js tailwind.config.js ./
+COPY --from=builder /app/dist/ ./dist/
+COPY --from=builder /app/public/ ./public/
 
 EXPOSE 3000
 USER node
