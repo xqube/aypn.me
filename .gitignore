@@ -10,13 +10,6 @@ public/search-index.json
 .DS_Store
 Thumbs.db
 
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
 # Logs
 *.log
 npm-debug.log*
