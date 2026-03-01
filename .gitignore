@@ -11,6 +11,7 @@ public/search-index.json
 Thumbs.db
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 

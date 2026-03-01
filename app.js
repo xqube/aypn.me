@@ -3,12 +3,19 @@ const compression = require('compression');
 const helmet = require('helmet');
 const path = require('path');
 
-const { PORT, IS_PROD } = require('./src/config');
-const { initCache } = require('./src/content/cache');
+const { IS_PROD } = require('./src/config');
+const logger = require('./src/logger');
+const morgan = require('morgan');
 const indexRoutes = require('./src/routes/index');
 const blogRoutes = require('./src/routes/blog');
+const feedRoutes = require('./src/routes/feed');
 
 const app = express();
+
+// Request logging — pipe morgan through winston
+app.use(morgan(IS_PROD ? 'combined' : 'dev', {
+    stream: { write: (msg) => logger.info(msg.trimEnd()) },
+}));
 
 // Gzip/deflate compression
 app.use(compression());
@@ -90,11 +97,13 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/', indexRoutes);
+app.use('/', feedRoutes);
 app.use('/blog', blogRoutes);
 
 // 404 handler
 app.use((req, res) => {
     const { SITE_URL } = require('./src/config');
+    logger.warn(`404 Not Found: ${req.method} ${req.originalUrl}`);
     res.status(404).render('404', {
         title: '404 — Not Found',
         description: 'The page you are looking for does not exist.',
@@ -103,15 +112,4 @@ app.use((req, res) => {
     });
 });
 
-// Initialize content cache, then start server
-async function start() {
-    await initCache();
-    app.listen(PORT, () => {
-        console.log(`server listening on http://localhost:${PORT}`);
-    });
-}
-
-start().catch((err) => {
-    console.error('Failed to start:', err);
-    process.exit(1);
-});
+module.exports = app;

@@ -1,7 +1,14 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const { SITE_URL, POSTS_PER_PAGE } = require('../config');
 const { getAllPosts, getPost, getLatestPosts, getTrendingPosts } = require('../content/cache');
+
+/** Generate a weak ETag from a short string key */
+function etag(key) {
+    const hash = crypto.createHash('md5').update(key).digest('hex').slice(0, 12);
+    return `W/"${hash}"`;
+}
 
 // Blog list — all posts
 router.get('/', (req, res) => {
@@ -13,6 +20,12 @@ router.get('/', (req, res) => {
     const currentPage = Math.max(1, Math.min(page, totalPages || 1));
     const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
     const paginatedPosts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+    // ETag based on post count + first post date + page
+    const firstDate = allPosts[0]?.frontmatter.date || '0';
+    const tag = etag(`list:${allPosts.length}:${firstDate}:${currentPage}`);
+    res.set('ETag', tag);
+    if (req.fresh) return res.sendStatus(304);
 
     res.render('blog', {
         title: 'Posts — blog.aypn',
@@ -40,6 +53,11 @@ router.get('/:slug', (req, res) => {
             siteUrl: SITE_URL,
         });
     }
+
+    // ETag based on the post's pre-compiled HTML (stable until rebuild)
+    const tag = etag(`post:${post.frontmatter.slug}:${post.frontmatter.date}`);
+    res.set('ETag', tag);
+    if (req.fresh) return res.sendStatus(304);
 
     res.render('post', {
         title: `${post.frontmatter.title} — blog.aypn`,

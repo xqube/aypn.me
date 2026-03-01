@@ -2,14 +2,15 @@
   "name": "aypn.me",
   "version": "1.0.0",
   "description": "Minimal technical blog — SSR with EJS, MDX content, Tailwind CSS v3",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node scripts/build-content.js && NODE_ENV=production node app.js",
-    "dev": "NODE_ENV=development node app.js",
+    "start": "node scripts/build-content.js && NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=development node server.js",
     "build:content": "node scripts/build-content.js",
     "build:content:force": "node scripts/build-content.js --force",
     "build:css": "npx tailwindcss -i ./input.css -o ./public/css/styles.css --minify",
-    "build": "npm run build:content && npm run build:css"
+    "build": "npm run build:content && npm run build:css",
+    "test": "vitest run"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -18,6 +19,7 @@
     "gray-matter": "^4.0.3",
     "hast-util-to-string": "^3.0.1",
     "helmet": "^8.1.0",
+    "morgan": "^1.10.0",
     "rehype-prism-plus": "^2.0.2",
     "rehype-raw": "^7.0.0",
     "rehype-stringify": "^10.0.0",
@@ -25,13 +27,16 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.1.0",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "chokidar": "^5.0.0",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13"
+    "supertest": "^7.0.0",
+    "tailwindcss": "^3.4.13",
+    "vitest": "^3.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
