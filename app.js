@@ -78,20 +78,15 @@ app.get('/AyyappanPillai.pdf', (req, res) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Optional Hot-Reload Middleware for Development
-app.use(async (req, res, next) => {
-    const { DISABLE_CACHE } = require('./src/config');
-    if (DISABLE_CACHE) {
-        // Clear JSON/JS require metadata cache
+// Dev-mode: clear require cache for JSON config files so edits take effect without restart.
+// MDX posts are handled by the chokidar file watcher in cache.js.
+if (process.env.NODE_ENV === 'development') {
+    app.use((req, res, next) => {
         delete require.cache[require.resolve(path.join(__dirname, 'content', 'projects.js'))];
         delete require.cache[require.resolve(path.join(__dirname, 'content', 'resume.js'))];
-
-        // Silently rebuild the MDX cache
-        const { initCache } = require('./src/content/cache');
-        await initCache(true);
-    }
-    next();
-});
+        next();
+    });
+}
 
 // Routes
 app.use('/', indexRoutes);

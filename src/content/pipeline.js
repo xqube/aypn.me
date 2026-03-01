@@ -80,18 +80,39 @@ function rehypeExternalLinks() {
  * Compile a single .mdx file to HTML with frontmatter extraction.
  * Uses unified + remark + rehype pipeline (ESM modules loaded dynamically).
  */
+
+// ── ESM Module Cache ─────────────────────────────────────────
+// Hoist imports: resolved ONCE, reused for every compileFile() call.
+let _modules = null;
+async function ensureModules() {
+    if (_modules) return _modules;
+    const [
+        { unified },
+        remarkParse,
+        remarkGfm,
+        remarkRehype,
+        rehypeRaw,
+        rehypePrism,
+        rehypeStringify,
+    ] = await Promise.all([
+        import('unified'),
+        import('remark-parse').then(m => m.default),
+        import('remark-gfm').then(m => m.default),
+        import('remark-rehype').then(m => m.default),
+        import('rehype-raw').then(m => m.default),
+        import('rehype-prism-plus').then(m => m.default),
+        import('rehype-stringify').then(m => m.default),
+    ]);
+    _modules = { unified, remarkParse, remarkGfm, remarkRehype, rehypeRaw, rehypePrism, rehypeStringify };
+    return _modules;
+}
+
 async function compileFile(filePath) {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const { data: frontmatter, content } = matter(raw);
 
-    // Dynamic imports for ESM-only packages
-    const { unified } = await import('unified');
-    const remarkParse = (await import('remark-parse')).default;
-    const remarkGfm = (await import('remark-gfm')).default;
-    const remarkRehype = (await import('remark-rehype')).default;
-    const rehypeRaw = (await import('rehype-raw')).default;
-    const rehypePrism = (await import('rehype-prism-plus')).default;
-    const rehypeStringify = (await import('rehype-stringify')).default;
+    const { unified, remarkParse, remarkGfm, remarkRehype, rehypeRaw, rehypePrism, rehypeStringify } =
+        await ensureModules();
 
     // Collect TOC entries during processing
     const toc = [];
@@ -153,4 +174,4 @@ async function compileFile(filePath) {
     };
 }
 
-module.exports = { compileFile };
+module.exports = { compileFile, ensureModules };

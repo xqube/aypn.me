@@ -4,9 +4,12 @@
   "description": "Minimal technical blog — SSR with EJS, MDX content, Tailwind CSS v3",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=production node app.js",
-    "dev": "NODE_ENV=development DISABLE_CACHE=true node app.js",
-    "build:css": "npx tailwindcss -i ./input.css -o ./public/css/styles.css --minify"
+    "start": "node scripts/build-content.js && NODE_ENV=production node app.js",
+    "dev": "NODE_ENV=development node app.js",
+    "build:content": "node scripts/build-content.js",
+    "build:content:force": "node scripts/build-content.js --force",
+    "build:css": "npx tailwindcss -i ./input.css -o ./public/css/styles.css --minify",
+    "build": "npm run build:content && npm run build:css"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -26,6 +29,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "chokidar": "^5.0.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13"
   },
