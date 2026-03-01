@@ -265,6 +265,55 @@ All color values are WCAG AA compliant with contrast ratios documented inline.
 
 ## Deployment
 
+### VPS — First-Time Setup
+
+SSH into your VPS and run once:
+
+```bash
+cd /home/xqube/aypn.me
+git clone <your-repo-url> .    # or you already have the code here
+npm ci
+npm run build
+npm prune --omit=dev           # remove devDependencies after build
+pm2 start ecosystem.config.js
+pm2 save                       # saves PM2 process list so it auto-starts on reboot
+```
+
+### VPS — Updating (Every Deploy)
+
+After pushing new posts or code changes to GitHub, SSH into your VPS:
+
+```bash
+cd /home/xqube/aypn.me
+git pull
+npm ci
+npm run build
+npm prune --omit=dev
+pm2 restart aypn.me
+```
+
+Or use the included deploy script to do it all in one command:
+
+```bash
+bash ~/aypn.me/deploy.sh
+```
+
+### When to Rebuild vs Just Restart
+
+| Scenario | Command |
+|---|---|
+| Code change (route, template, middleware) | `pm2 restart aypn.me` |
+| New or edited blog post (`.mdx`) | `npm run build:content && pm2 restart aypn.me` |
+| Changed theme/CSS (`input.css`, `theme.config.js`) | `npm run build:css && pm2 restart aypn.me` |
+| New post + CSS change | `npm run build && pm2 restart aypn.me` |
+
+### With Docker
+
+```bash
+docker build -t aypn-blog .
+docker run -p 3000:3000 aypn-blog
+```
+
 ### Nginx (Recommended)
 
 An Nginx reverse proxy configuration is provided in `nginx/blog.conf`:
